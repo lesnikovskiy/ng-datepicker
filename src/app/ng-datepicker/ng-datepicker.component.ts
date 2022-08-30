@@ -1,6 +1,5 @@
 import { Component, ElementRef, EventEmitter, HostListener, Input, OnInit, Output } from '@angular/core';
 import * as moment from 'moment';
-import { range } from 'lodash';
 
 export interface CalendarDate {
   mDate: moment.Moment;
@@ -113,8 +112,9 @@ export class NgDatepickerComponent implements OnInit {
     const lastDayOfGrid = moment(currentMoment).endOf('month').subtract(lastOfMonth - 1, 'days').add(7, 'days');
 
     const startCalendar = firstDayOfGrid.date();
+    const endCalendar = startCalendar + lastDayOfGrid.diff(firstDayOfGrid, 'days');
 
-    return range(startCalendar, startCalendar + lastDayOfGrid.diff(firstDayOfGrid, 'days')).map((date) => {
+    return this.getRange(startCalendar, endCalendar).map((date) => {
       const newDate = moment(firstDayOfGrid).date(date);
       return {
         today: this.isToday(newDate),
@@ -159,5 +159,15 @@ export class NgDatepickerComponent implements OnInit {
       return true;
 
     return false;
+  }
+
+  private getRange(from: number, to: number): number[] {
+    const result = [];
+
+    for (let i = from; i < to; i++) {
+      result.push(i);
+    }
+
+    return result;
   }
 }
