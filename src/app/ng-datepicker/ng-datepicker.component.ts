@@ -25,8 +25,7 @@ export class NgDatepickerComponent implements OnInit {
 
   @Output() dateSelected = new EventEmitter<string>();
 
-  currentDate = moment();
-  currentMonth!: number;
+  currentDate!: moment.Moment;
   hours = '00';
   minutes = '00';
   namesOfDays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
@@ -44,9 +43,7 @@ export class NgDatepickerComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    debugger
-    this.selectedDate = moment(this.currentDate).format(this.format);
-    this.currentMonth = this.currentDate.month();
+    this.currentDate = this.selectedDate ? moment(this.selectedDate, this.format) : moment();
     this.minDateMoment = moment(this.minDate, this.format);
     this.maxDateMoment = moment(this.maxDate, this.format);
 
@@ -70,14 +67,12 @@ export class NgDatepickerComponent implements OnInit {
 
   prevMonth(): void {
     this.currentDate = moment(this.currentDate).subtract(1, 'months');
-    this.currentMonth = this.currentDate.month();
     this.checkNavButtonsDisabled();
     this.generateCalendar();
   }
 
   nextMonth(): void {
     this.currentDate = moment(this.currentDate).add(1, 'months');
-    this.currentMonth = this.currentDate.month();
     this.checkNavButtonsDisabled();
     this.generateCalendar();
   }
@@ -127,7 +122,6 @@ export class NgDatepickerComponent implements OnInit {
   }
 
   private timeChanged() {
-    this.currentMonth = this.currentDate.month();
     this.generateTime();
     this.generateCalendar();
 
@@ -170,11 +164,11 @@ export class NgDatepickerComponent implements OnInit {
 
   private checkNavButtonsDisabled() {
     if (this.minDateMoment != null) {
-      this.isPrevDisabled = this.minDateMoment.month() === this.currentMonth;
+      this.isPrevDisabled = this.minDateMoment.month() === this.currentDate.month();
     }
 
     if (this.maxDateMoment != null) {
-      this.isNextDisabled = this.maxDateMoment.month() === this.currentMonth;
+      this.isNextDisabled = this.maxDateMoment.month() === this.currentDate.month();
     }
   }
 
