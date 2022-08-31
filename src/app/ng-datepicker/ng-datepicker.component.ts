@@ -60,7 +60,7 @@ export class NgDatepickerComponent implements OnInit {
     }
   }
 
-  showCalendar(event: Event) {
+  toggleCalendar(event: Event) {
     event.preventDefault();
     event.stopPropagation();
 
@@ -85,17 +85,17 @@ export class NgDatepickerComponent implements OnInit {
   }
 
   decrementHours() {
-    this.currentDate = this.currentDate.subtract(1, 'hour');
+    this.currentDate = moment(this.currentDate).subtract(1, 'hour');
     this.timeChanged();
   }
 
   incrementMinutes() {
-    this.currentDate = this.currentDate.add(this.minuteStep, 'minutes');
+    this.currentDate = moment(this.currentDate).add(this.minuteStep, 'minutes');
     this.timeChanged();
   }
 
   decrementMinutes() {
-    this.currentDate = this.currentDate.subtract(this.minuteStep, 'minutes');
+    this.currentDate = moment(this.currentDate).subtract(this.minuteStep, 'minutes');
     this.timeChanged();
   }
 
@@ -108,10 +108,15 @@ export class NgDatepickerComponent implements OnInit {
     return moment(date.mDate).isSame(this.selectedMonth, 'month');
   }
 
-  selectDate(date: CalendarDate) {
+  selectDate(date: CalendarDate, event: Event) {
+    event.preventDefault();
+    event.stopPropagation();
+
     this.currentDate = date.mDate;
     this.selectedDate = moment(this.currentDate).format(this.format);
     this.dateSelected.emit(this.selectedDate);
+
+    this.show = this.isDateTime ? true : false;
 
     this.generateTime();
     this.generateCalendar();

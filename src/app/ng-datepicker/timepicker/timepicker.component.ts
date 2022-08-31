@@ -1,21 +1,16 @@
-import { Component, EventEmitter, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
   selector: 'app-timepicker',
   templateUrl: './timepicker.component.html',
   styleUrls: ['./timepicker.component.scss']
 })
-export class TimepickerComponent implements OnInit {
+export class TimepickerComponent {
   @Input() hours!: string;
   @Input() minutes!: string;
 
-  incrementHours = new EventEmitter();
-  decrementHours = new EventEmitter();
-  incrementMinutes = new EventEmitter();
-  decrementMinutes = new EventEmitter();
-
-  constructor() { }
-
-  ngOnInit(): void {
-  }
+  @Output() incrementHours = new EventEmitter();
+  @Output() decrementHours = new EventEmitter();
+  @Output() incrementMinutes = new EventEmitter();
+  @Output() decrementMinutes = new EventEmitter();
 }

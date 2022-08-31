@@ -7,9 +7,14 @@ import { NgDatepickerComponent } from './ng-datepicker/ng-datepicker.component';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  title = 'datepicker';
+  dateTime = '';
+  date = '';
+
+  dateTimeSelected(date: string) {
+    this.dateTime = date;
+  }
 
   dateSelected(date: string) {
-    this.title = date;
+    this.date = date;
   }
 }

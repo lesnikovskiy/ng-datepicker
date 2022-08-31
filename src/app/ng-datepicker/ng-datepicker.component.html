@@ -1,6 +1,6 @@
 <div class="calendar__wrapper">
   <div class="form-group">
-    <div class="input-group" (click)="showCalendar($event)">
+    <div class="input-group" (click)="toggleCalendar($event)">
       <input type="text" readonly ngDefaultControl class="form-control" [value]="selectedDate">
       <span class="input-group-addon">
         <span class="glyphicon glyphicon-calendar"></span>
@@ -25,7 +25,7 @@
             <ng-container *ngFor="let day of week">
               <div class="calendar__date"
                 [ngClass]="{'today': day.today, 'selected': day.selected, 'disabled': day.disabled, 'diff-month': !isSelectedMonth(day)}"
-                (click)="selectDate(day)">
+                (click)="selectDate(day, $event)">
                 <span class="calendar__number">{{ day.mDate.date() }}</span>
               </div>
             </ng-container>
