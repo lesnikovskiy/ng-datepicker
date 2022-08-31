@@ -26,6 +26,7 @@ export class NgDatepickerComponent implements OnInit {
   @Output() dateSelected = new EventEmitter<string>();
 
   currentDate!: moment.Moment;
+  selectedMonth!: moment.Moment;
   hours = '00';
   minutes = '00';
   namesOfDays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
@@ -44,6 +45,7 @@ export class NgDatepickerComponent implements OnInit {
 
   ngOnInit() {
     this.currentDate = this.selectedDate ? moment(this.selectedDate, this.format) : moment();
+    this.selectedMonth = moment(this.currentDate);
     this.minDateMoment = moment(this.minDate, this.format);
     this.maxDateMoment = moment(this.maxDate, this.format);
 
@@ -66,19 +68,19 @@ export class NgDatepickerComponent implements OnInit {
   }
 
   prevMonth(): void {
-    this.currentDate = moment(this.currentDate).subtract(1, 'months');
+    this.selectedMonth = moment(this.selectedMonth).subtract(1, 'months');
     this.checkNavButtonsDisabled();
     this.generateCalendar();
   }
 
   nextMonth(): void {
-    this.currentDate = moment(this.currentDate).add(1, 'months');
+    this.selectedMonth = moment(this.selectedMonth).add(1, 'months');
     this.checkNavButtonsDisabled();
     this.generateCalendar();
   }
 
   incrementHours() {
-    this.currentDate = this.currentDate.add(1, 'hour');
+    this.currentDate = moment(this.currentDate).add(1, 'hour');
     this.timeChanged();
   }
 
@@ -103,11 +105,12 @@ export class NgDatepickerComponent implements OnInit {
   }
 
   isSelectedMonth(date: CalendarDate): boolean {
-    return moment(date.mDate).isSame(this.currentDate, 'month');
+    return moment(date.mDate).isSame(this.selectedMonth, 'month');
   }
 
   selectDate(date: CalendarDate) {
-    this.selectedDate = moment(date.mDate).format(this.format);
+    this.currentDate = date.mDate;
+    this.selectedDate = moment(this.currentDate).format(this.format);
     this.dateSelected.emit(this.selectedDate);
 
     this.generateTime();
@@ -122,15 +125,15 @@ export class NgDatepickerComponent implements OnInit {
   }
 
   private timeChanged() {
+    this.selectedDate = moment(this.currentDate).format(this.format);
+    this.dateSelected.emit(this.selectedDate);
+
     this.generateTime();
     this.generateCalendar();
-
-    this.selectedDate = this.currentDate.format(this.format);
-    this.dateSelected.emit(this.selectedDate);
   }
 
   private generateCalendar(): void {
-    const dates = this.fillDates(this.currentDate);
+    const dates = this.fillDates(this.selectedMonth);
     const weeks = [];
 
     while (dates.length > 0) {
@@ -164,11 +167,11 @@ export class NgDatepickerComponent implements OnInit {
 
   private checkNavButtonsDisabled() {
     if (this.minDateMoment != null) {
-      this.isPrevDisabled = this.minDateMoment.month() === this.currentDate.month();
+      this.isPrevDisabled = this.minDateMoment.month() === this.selectedMonth.month();
     }
 
     if (this.maxDateMoment != null) {
-      this.isNextDisabled = this.maxDateMoment.month() === this.currentDate.month();
+      this.isNextDisabled = this.maxDateMoment.month() === this.selectedMonth.month();
     }
   }
 
@@ -177,7 +180,7 @@ export class NgDatepickerComponent implements OnInit {
   }
 
   private isSelected(date: moment.Moment): boolean {
-    return this.selectedDate === moment(date).format(this.format);
+    return date.isSame(this.currentDate, 'date');
   }
 
   private isDisabled(date: moment.Moment) {

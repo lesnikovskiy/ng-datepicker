@@ -12,7 +12,7 @@
       <div class="calendar__navs">
         <div class="calendar__month-nav">
           <button [disabled]="isPrevDisabled" class="glyphicon glyphicon-chevron-left calendar__nav-btn" (click)="prevMonth()"></button>
-          <span>{{ currentDate.format('MMMM') }} {{ currentDate.format('YYYY') }}</span>
+          <span>{{ selectedMonth.format('MMMM') }} {{ selectedMonth.format('YYYY') }}</span>
           <button [disabled]="isNextDisabled" class="glyphicon glyphicon-chevron-right calendar__nav-btn" (click)="nextMonth()"></button>
         </div>
       </div>
@@ -34,17 +34,9 @@
       </div>
     </div>
     <div *ngIf="isDateTime" class="calendar__datetime">
-      <div class="time-control">
-        <a (click)="incrementHours()" title="Increment Hours" class="glyphicon glyphicon-chevron-up" role="button"></a>
-        <span>{{ hours }}</span>
-        <a (click)="decrementHours()" title="Decrement Hours" class="glyphicon glyphicon-chevron-down" role="button"></a>
-      </div>
-      <div class="separator">:</div>
-      <div class="time-control">
-        <a (click)="incrementMinutes()" title="Increment Minutes" class="glyphicon glyphicon-chevron-up" role="button"></a>
-        <span>{{ minutes }}</span>
-        <a (click)="decrementMinutes()" title="Decrement Minutes" class="glyphicon glyphicon-chevron-down" role="button"></a>
-      </div>
+      <app-timepicker [hours]="hours" [minutes]="minutes" (incrementHours)="incrementHours()"
+        (decrementHours)="decrementHours()" (incrementMinutes)="incrementMinutes()"
+        (decrementMinutes)="decrementMinutes()"></app-timepicker>
     </div>
   </div>
 </div>

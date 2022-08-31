@@ -1,0 +1,40 @@
+:host {
+  width: 100%;
+  height: 100%;
+
+  .time-control-container {
+    display: flex;
+    width: 100%;
+    height: 100%;
+
+    .separator {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8rem;
+    }
+
+    .time-control {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-around;
+      flex: 1 1 auto;
+      font-size: 1.8rem;
+      margin: 20px 0 0 0;
+
+      & > a {
+        text-decoration: none;
+        border: none;
+        outline: none;
+        border-radius: 3px;
+        padding: 5px;
+        cursor: pointer;
+
+        &:hover {
+          background-color: #eee;
+        }
+      }
+    }
+  }
+}

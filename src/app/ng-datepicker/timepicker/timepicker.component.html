@@ -1,0 +1,16 @@
+<div class="time-control-container">
+  <div class="time-control">
+    <a (click)="incrementHours.emit()" title="Increment Hours" class="glyphicon glyphicon-chevron-up" role="button"></a>
+    <span>{{ hours }}</span>
+    <a (click)="decrementHours.emit()" title="Decrement Hours" class="glyphicon glyphicon-chevron-down"
+      role="button"></a>
+  </div>
+  <div class="separator">:</div>
+  <div class="time-control">
+    <a (click)="incrementMinutes.emit()" title="Increment Minutes" class="glyphicon glyphicon-chevron-up"
+      role="button"></a>
+    <span>{{ minutes }}</span>
+    <a (click)="decrementMinutes.emit()" title="Decrement Minutes" class="glyphicon glyphicon-chevron-down"
+      role="button"></a>
+  </div>
+</div>
