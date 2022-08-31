@@ -1,16 +1,26 @@
 <div class="time-control-container">
-  <div class="time-control">
-    <a (click)="incrementHours.emit()" title="Increment Hours" class="glyphicon glyphicon-chevron-up" role="button"></a>
-    <span>{{ hours }}</span>
-    <a (click)="decrementHours.emit()" title="Decrement Hours" class="glyphicon glyphicon-chevron-down"
-      role="button"></a>
+  <div *ngIf="timerVisible" class="timer-container">
+    <div class="time-control">
+      <a (click)="incrementHours.emit()" title="Increment Hour" class="glyphicon glyphicon-chevron-up" role="button"></a>
+      <button (click)="showHourRangeView($event)" title="Pick Hour">{{ hours }}</button>
+      <a (click)="decrementHours.emit()" title="Decrement Hour" class="glyphicon glyphicon-chevron-down"
+        role="button"></a>
+    </div>
+    <div class="separator">:</div>
+    <div class="time-control">
+      <a (click)="incrementMinutes.emit()" title="Increment Minute" class="glyphicon glyphicon-chevron-up"
+        role="button"></a>
+      <button (click)="showMinuteRangView($event)" title="Pick Minute">{{ minutes }}</button>
+      <a (click)="decrementMinutes.emit()" title="Decrement Minute" class="glyphicon glyphicon-chevron-down"
+        role="button"></a>
+    </div>
   </div>
-  <div class="separator">:</div>
-  <div class="time-control">
-    <a (click)="incrementMinutes.emit()" title="Increment Minutes" class="glyphicon glyphicon-chevron-up"
-      role="button"></a>
-    <span>{{ minutes }}</span>
-    <a (click)="decrementMinutes.emit()" title="Decrement Minutes" class="glyphicon glyphicon-chevron-down"
-      role="button"></a>
+  <div *ngIf="selectHourVisible" class="select-hour-container">
+    <div *ngFor="let h of hoursRange" class="time-unit-button">
+      <button>{{ h }}</button>
+    </div>
+  </div>
+  <div *ngIf="selectMinuteVisible" class="select-minute-container">
+
   </div>
 </div>
