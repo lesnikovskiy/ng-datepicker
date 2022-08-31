@@ -191,6 +191,10 @@ export class NgDatepickerComponent implements OnInit {
 
     if (this.maxDateMoment == null || !next.isAfter(this.maxDateMoment)) {
       this.currentDate = moment(next);
+
+      if (next.month() !== this.selectedMonth.month()) {
+        this.selectedMonth = moment(next);
+      }
     }
   }
 
@@ -201,6 +205,10 @@ export class NgDatepickerComponent implements OnInit {
 
     if(this.minDateMoment == null || !prev.isBefore(this.minDateMoment)) {
       this.currentDate = moment(prev);
+
+      if (prev.month() !== this.selectedMonth.month()) {
+        this.selectedMonth = moment(prev);
+      }
     }
   }
 
