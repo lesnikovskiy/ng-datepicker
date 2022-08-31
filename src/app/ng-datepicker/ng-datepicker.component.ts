@@ -49,8 +49,8 @@ export class NgDatepickerComponent implements OnInit {
     this.minDateMoment = moment(this.minDate, this.format);
     this.maxDateMoment = moment(this.maxDate, this.format);
 
-    this.generateTime();
-    this.generateCalendar();
+    this.renderTime();
+    this.renderCalendar();
   }
 
   @HostListener('document:click', ['$event'])
@@ -70,32 +70,36 @@ export class NgDatepickerComponent implements OnInit {
   prevMonth(): void {
     this.selectedMonth = moment(this.selectedMonth).subtract(1, 'months');
     this.checkNavButtonsDisabled();
-    this.generateCalendar();
+    this.renderCalendar();
   }
 
   nextMonth(): void {
     this.selectedMonth = moment(this.selectedMonth).add(1, 'months');
     this.checkNavButtonsDisabled();
-    this.generateCalendar();
+    this.renderCalendar();
   }
 
   incrementHours() {
-    this.currentDate = moment(this.currentDate).add(1, 'hour');
+    let next = moment(this.currentDate).add(1, 'hour');
+    this.setIncrementDate(next);
     this.timeChanged();
   }
 
   decrementHours() {
-    this.currentDate = moment(this.currentDate).subtract(1, 'hour');
+    let prev = moment(this.currentDate).subtract(1, 'hour');
+    this.setDecrementDate(prev);
     this.timeChanged();
   }
 
   incrementMinutes() {
-    this.currentDate = moment(this.currentDate).add(this.minuteStep, 'minutes');
+    const next = moment(this.currentDate).add(this.minuteStep, 'minutes');
+    this.setIncrementDate(next);
     this.timeChanged();
   }
 
   decrementMinutes() {
-    this.currentDate = moment(this.currentDate).subtract(this.minuteStep, 'minutes');
+    const prev = moment(this.currentDate).subtract(this.minuteStep, 'minutes');
+    this.setDecrementDate(prev);
     this.timeChanged();
   }
 
@@ -118,11 +122,11 @@ export class NgDatepickerComponent implements OnInit {
 
     this.show = this.isDateTime ? true : false;
 
-    this.generateTime();
-    this.generateCalendar();
+    this.renderTime();
+    this.renderCalendar();
   }
 
-  private generateTime() {
+  private renderTime() {
     if (this.isDateTime) {
       this.hours = this.fixTimeZero(this.currentDate.hours());
       this.minutes = this.fixTimeZero(this.currentDate.minutes());
@@ -133,11 +137,11 @@ export class NgDatepickerComponent implements OnInit {
     this.selectedDate = moment(this.currentDate).format(this.format);
     this.dateSelected.emit(this.selectedDate);
 
-    this.generateTime();
-    this.generateCalendar();
+    this.renderTime();
+    this.renderCalendar();
   }
 
-  private generateCalendar(): void {
+  private renderCalendar(): void {
     const dates = this.fillDates(this.selectedMonth);
     const weeks = [];
 
@@ -177,6 +181,26 @@ export class NgDatepickerComponent implements OnInit {
 
     if (this.maxDateMoment != null) {
       this.isNextDisabled = this.maxDateMoment.month() === this.selectedMonth.month();
+    }
+  }
+
+  private setIncrementDate(next: moment.Moment) {
+    while (this.daysOfWeekDisabled.includes(next.day())) {
+      next = moment(next).add(1, 'day');
+    }
+
+    if (this.maxDateMoment == null || !next.isAfter(this.maxDateMoment)) {
+      this.currentDate = moment(next);
+    }
+  }
+
+  private setDecrementDate(prev: moment.Moment) {
+    while(this.daysOfWeekDisabled.includes(prev.day())) {
+      prev = moment(prev).subtract(1, 'day');
+    }
+
+    if(this.minDateMoment == null || !prev.isBefore(this.minDateMoment)) {
+      this.currentDate = moment(prev);
     }
   }
 
