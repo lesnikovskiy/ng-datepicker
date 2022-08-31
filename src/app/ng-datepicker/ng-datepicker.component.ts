@@ -20,11 +20,15 @@ export class NgDatepickerComponent implements OnInit {
   @Input() selectedDate: string | null = null;
   @Input() minDate: string | null = null;
   @Input() maxDate: string | null = null;
+  @Input() isDateTime = false;
+  @Input() minuteStep = 30;
 
   @Output() dateSelected = new EventEmitter<string>();
 
   currentDate = moment();
   currentMonth!: number;
+  hours = '00';
+  minutes = '00';
   namesOfDays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
   weeks: Array<CalendarDate[]> = [];
 
@@ -40,10 +44,13 @@ export class NgDatepickerComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    debugger
     this.selectedDate = moment(this.currentDate).format(this.format);
     this.currentMonth = this.currentDate.month();
     this.minDateMoment = moment(this.minDate, this.format);
     this.maxDateMoment = moment(this.maxDate, this.format);
+
+    this.generateTime();
     this.generateCalendar();
   }
 
@@ -75,6 +82,26 @@ export class NgDatepickerComponent implements OnInit {
     this.generateCalendar();
   }
 
+  incrementHours() {
+    this.currentDate = this.currentDate.add(1, 'hour');
+    this.timeChanged();
+  }
+
+  decrementHours() {
+    this.currentDate = this.currentDate.subtract(1, 'hour');
+    this.timeChanged();
+  }
+
+  incrementMinutes() {
+    this.currentDate = this.currentDate.add(this.minuteStep, 'minutes');
+    this.timeChanged();
+  }
+
+  decrementMinutes() {
+    this.currentDate = this.currentDate.subtract(this.minuteStep, 'minutes');
+    this.timeChanged();
+  }
+
   isDisabledMonth(currentDate: moment.Moment): boolean {
     const today = moment();
     return moment(currentDate).isBefore(today, 'months');
@@ -86,11 +113,26 @@ export class NgDatepickerComponent implements OnInit {
 
   selectDate(date: CalendarDate) {
     this.selectedDate = moment(date.mDate).format(this.format);
-
     this.dateSelected.emit(this.selectedDate);
 
+    this.generateTime();
     this.generateCalendar();
-    this.show = !this.show;
+  }
+
+  private generateTime() {
+    if (this.isDateTime) {
+      this.hours = this.fixTimeZero(this.currentDate.hours());
+      this.minutes = this.fixTimeZero(this.currentDate.minutes());
+    }
+  }
+
+  private timeChanged() {
+    this.currentMonth = this.currentDate.month();
+    this.generateTime();
+    this.generateCalendar();
+
+    this.selectedDate = this.currentDate.format(this.format);
+    this.dateSelected.emit(this.selectedDate);
   }
 
   private generateCalendar(): void {
@@ -128,9 +170,6 @@ export class NgDatepickerComponent implements OnInit {
 
   private checkNavButtonsDisabled() {
     if (this.minDateMoment != null) {
-      const minDateMonth = this.minDateMoment.month();
-      const currMonth = this.currentMonth;
-      console.log(`prev: ${minDateMonth} curr: ${currMonth}`)
       this.isPrevDisabled = this.minDateMoment.month() === this.currentMonth;
     }
 
@@ -169,5 +208,9 @@ export class NgDatepickerComponent implements OnInit {
     }
 
     return result;
+  }
+
+  private fixTimeZero(hours: number): string {
+    return hours <= 0 || hours <= 9 ? `0${hours}` : `${hours}`;
   }
 }

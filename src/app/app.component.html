@@ -1,9 +1,10 @@
 <h1>{{ title }}</h1>
 <div class="date_picker_container">
   <app-ng-datepicker
-    format="DD.MM.YYYY"
+    format="DD.MM.YYYY HH:mm"
     minDate="12.07.2022"
     maxDate="12.10.2022"
+    [isDateTime]="true"
     [daysOfWeekDisabled]="[0]"
     (dateSelected)="dateSelected($event)">
   </app-ng-datepicker>

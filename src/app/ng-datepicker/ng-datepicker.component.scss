@@ -1,19 +1,54 @@
 .calendar {
   position: absolute;
   top: 36px;
-  right: 0;
   padding: 5px;
-  width: 26rem;
   font-size: 13px;
   background-color: #fff;
   box-shadow: 0 4px 25px 0 rgba(0, 0, 0, 0.1), 0 4px 25px 0 rgba(0, 184, 178, 0.08);
   border-radius: 4px;
   z-index: 20;
   user-select: none;
+  display: flex;
+  flex-direction: row;
 
   &__wrapper {
     position: relative;
     margin-bottom: 17px;
+  }
+
+  &__dates-only {
+    width: 26rem;
+  }
+
+  &__datetime {
+    width: 26rem;
+    display: flex;
+
+    .separator {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8rem;
+    }
+
+    .time-control {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-around;
+      flex: 1 1 auto;
+      font-size: 1.8rem;
+      margin: 20px 0 0 0;
+
+      & > a {
+        text-decoration: none;
+        padding: 5px;
+
+        &:hover {
+          background-color: #eee;
+        }
+      }
+    }
   }
 
   &__navs {
@@ -27,7 +62,7 @@
     background-color: transparent;
     border: none;
     outline: none;
-    &[disabled]{
+    &[disabled] {
       color: transparent;
       pointer-events: none;
       user-select: none;
@@ -70,7 +105,8 @@
     flex-direction: row;
   }
 
-  &__date, &__day-name {
+  &__date,
+  &__day-name {
     text-align: center;
     padding: 5px;
     width: 14.29%;
@@ -85,7 +121,7 @@
     padding: 5px;
     position: relative;
     &:after {
-      content: '';
+      content: "";
       height: 30px * 0.9;
       width: 30px * 0.9;
       position: absolute;
@@ -115,7 +151,7 @@
       font-weight: bold;
 
       &:before {
-        content: '';
+        content: "";
         border: solid transparent;
         border-width: 0 0 7px 7px;
         border-bottom-color: #337ab7;
