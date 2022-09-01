@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { MinuteRange } from '../../models/range.type';
 import * as moment from 'moment';
 
 @Component({
@@ -8,6 +9,7 @@ import * as moment from 'moment';
 })
 export class TimepickerComponent {
   @Input() currentDate!: moment.Moment;
+  @Input() minuteStep: MinuteRange = 30;
 
   @Output() incrementHours = new EventEmitter();
   @Output() decrementHours = new EventEmitter();
@@ -79,11 +81,12 @@ export class TimepickerComponent {
 
   private getMinutesRange(): number[] {
     const result = [];
+    const minStep = this.minuteStep < 5 ? 5 : this.minuteStep;
 
     let i = 0;
     while(i < 60) {
       result.push(i);
-      i += 5
+      i += minStep;
     }
 
     return result;

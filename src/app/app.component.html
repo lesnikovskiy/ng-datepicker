@@ -2,7 +2,7 @@
 <div class="date_picker_container">
   <h1>DateTime: {{ dateTime }}</h1>
   <bsng-datepicker format="DD.MM.YYYY HH:mm" selectedDate="31.08.2022 09:00" minDate="12.07.2022" maxDate="12.10.2022 23:30"
-    [isDateTime]="true" [daysOfWeekDisabled]="[0]" (dateSelected)="dateTimeSelected($event)">
+    [isDateTime]="true" [minuteStep]="30" [daysOfWeekDisabled]="[0]" (dateSelected)="dateTimeSelected($event)">
   </bsng-datepicker>
   <h1>Date: {{ date }}</h1>
   <bsng-datepicker format="DD.MM.YYYY" selectedDate="02.09.2022" minDate="03.07.2022" maxDate="14.12.2022"

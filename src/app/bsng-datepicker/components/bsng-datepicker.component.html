@@ -34,7 +34,7 @@
       </div>
     </div>
     <div *ngIf="isDateTime" class="calendar__datetime">
-      <bsng-timepicker [currentDate]="currentDate" (incrementHours)="incrementHours()"
+      <bsng-timepicker [currentDate]="currentDate" [minuteStep]="minuteStep" (incrementHours)="incrementHours()"
         (decrementHours)="decrementHours()" (incrementMinutes)="incrementMinutes()"
         (decrementMinutes)="decrementMinutes()" (addHour)="addHour($event)" (addMinute)="addMinite($event)"></bsng-timepicker>
     </div>
