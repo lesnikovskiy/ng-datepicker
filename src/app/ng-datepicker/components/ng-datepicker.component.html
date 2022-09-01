@@ -34,7 +34,7 @@
       </div>
     </div>
     <div *ngIf="isDateTime" class="calendar__datetime">
-      <app-timepicker [hours]="hours" [minutes]="minutes" (incrementHours)="incrementHours()"
+      <app-timepicker [currentDate]="currentDate" (incrementHours)="incrementHours()"
         (decrementHours)="decrementHours()" (incrementMinutes)="incrementMinutes()"
         (decrementMinutes)="decrementMinutes()"></app-timepicker>
     </div>

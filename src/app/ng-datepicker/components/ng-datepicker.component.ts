@@ -27,8 +27,6 @@ export class NgDatepickerComponent implements OnInit {
 
   currentDate!: moment.Moment;
   selectedMonth!: moment.Moment;
-  hours = '00';
-  minutes = '00';
   namesOfDays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
   weeks: Array<CalendarDate[]> = [];
 
@@ -49,7 +47,6 @@ export class NgDatepickerComponent implements OnInit {
     this.minDateMoment = moment(this.minDate, this.format);
     this.maxDateMoment = moment(this.maxDate, this.format);
 
-    this.renderTime();
     this.renderCalendar();
   }
 
@@ -122,22 +119,13 @@ export class NgDatepickerComponent implements OnInit {
 
     this.show = this.isDateTime ? true : false;
 
-    this.renderTime();
     this.renderCalendar();
-  }
-
-  private renderTime() {
-    if (this.isDateTime) {
-      this.hours = this.fixTimeZero(this.currentDate.hours());
-      this.minutes = this.fixTimeZero(this.currentDate.minutes());
-    }
   }
 
   private timeChanged() {
     this.selectedDate = moment(this.currentDate).format(this.format);
     this.dateSelected.emit(this.selectedDate);
 
-    this.renderTime();
     this.renderCalendar();
   }
 

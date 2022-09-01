@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-timepicker',
@@ -6,16 +7,17 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
   styleUrls: ['./timepicker.component.scss']
 })
 export class TimepickerComponent {
-  @Input() hours!: string;
-  @Input() minutes!: string;
+  @Input() currentDate!: moment.Moment;
 
   @Output() incrementHours = new EventEmitter();
   @Output() decrementHours = new EventEmitter();
   @Output() incrementMinutes = new EventEmitter();
   @Output() decrementMinutes = new EventEmitter();
+  @Output() addHour = new EventEmitter<number>();
+  @Output() addMinute = new EventEmitter<number>();
 
-  hoursRange: string[] = [];
-  minutesRange: string[] = [];
+  hoursRange: number[] = [];
+  minutesRange: number[] = [];
 
   timerVisible = true;
   selectHourVisible = false;
@@ -39,27 +41,23 @@ export class TimepickerComponent {
     this.minutesRange = this.getMinutesRange();
   }
 
-  getHoursRange(): string[] {
+  getHoursRange(): number[] {
     const result = [];
 
     for (let i = 0; i < 24; i++) {
-      result.push(this.fixTimeZero(i));
+      result.push(i);
     }
 
     return result;
   }
 
-  getMinutesRange(): string[] {
+  getMinutesRange(): number[] {
     const result = [];
 
     for (let i = 0; i < 60; i + 5) {
-      result.push(this.fixTimeZero(i));
+      result.push(i);
     }
 
     return result;
-  }
-
-  private fixTimeZero(hours: number): string {
-    return hours <= 0 || hours <= 9 ? `0${hours}` : `${hours}`;
   }
 }

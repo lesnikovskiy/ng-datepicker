@@ -1,5 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
-import { NgDatepickerComponent } from './ng-datepicker/ng-datepicker.component';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-root',
