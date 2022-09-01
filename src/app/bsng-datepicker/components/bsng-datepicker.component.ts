@@ -1,14 +1,7 @@
 import { Component, ElementRef, EventEmitter, HostListener, Input, OnInit, Output } from '@angular/core';
+import { CalendarDate } from '../models/calendar-date.model';
 import { BsngMinuteRange } from '../models/range.type';
 import * as moment from 'moment';
-
-export interface CalendarDate {
-  mDate: moment.Moment;
-  wDay: number;
-  selected?: boolean;
-  disabled?: boolean;
-  today?: boolean;
-}
 
 @Component({
   selector: 'bsng-datepicker',
