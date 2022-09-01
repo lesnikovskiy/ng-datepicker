@@ -5,6 +5,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 })
 export class DisplayTimePipe implements PipeTransform {
   transform(value: number): string {
-    return value <= 0 || value <= 9 ? `0${value}` : `${value}`;
+    const val = value < 0 ? 0 : value;
+    return val <= 9 ? `0${val}` : `${val}`;
   }
 }
