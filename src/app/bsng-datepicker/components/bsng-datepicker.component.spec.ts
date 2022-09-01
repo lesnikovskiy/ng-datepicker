@@ -6,14 +6,11 @@ describe('BsngDatepickerComponent', () => {
   let component: BsngDatepickerComponent;
   let fixture: ComponentFixture<BsngDatepickerComponent>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      declarations: [ BsngDatepickerComponent ]
-    })
-    .compileComponents();
-  });
-
   beforeEach(() => {
+    TestBed.configureTestingModule({
+      declarations: [BsngDatepickerComponent]
+    });
+
     fixture = TestBed.createComponent(BsngDatepickerComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

@@ -1,8 +1,13 @@
 import { DisplayTimePipe } from './display-time.pipe';
 
 describe('DisplayTimePipe', () => {
+  let pipe: DisplayTimePipe;
+
+  beforeEach(() => {
+    pipe = new DisplayTimePipe();
+  }); 
+
   it('create an instance', () => {
-    const pipe = new DisplayTimePipe();
     expect(pipe).toBeTruthy();
   });
 });
