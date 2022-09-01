@@ -1,5 +1,5 @@
 import { Component, ElementRef, EventEmitter, HostListener, Input, OnInit, Output } from '@angular/core';
-import { MinuteRange } from '../models/range.type';
+import { BsngMinuteRange } from '../models/range.type';
 import * as moment from 'moment';
 
 export interface CalendarDate {
@@ -22,7 +22,7 @@ export class BsngDatepickerComponent implements OnInit {
   @Input() minDate: string | null = null;
   @Input() maxDate: string | null = null;
   @Input() isDateTime = false;
-  @Input() minuteStep: MinuteRange = 30;
+  @Input() minuteStep: BsngMinuteRange = 30;
 
   @Output() dateSelected = new EventEmitter<string>();
 
