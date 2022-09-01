@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import * as moment from 'moment';
 
 @Component({
-  selector: 'app-timepicker',
+  selector: 'bsng-timepicker',
   templateUrl: './timepicker.component.html',
   styleUrls: ['./timepicker.component.scss']
 })

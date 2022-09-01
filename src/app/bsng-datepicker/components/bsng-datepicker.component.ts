@@ -10,11 +10,11 @@ export interface CalendarDate {
 }
 
 @Component({
-  selector: 'app-ng-datepicker',
-  templateUrl: './ng-datepicker.component.html',
-  styleUrls: ['./ng-datepicker.component.scss']
+  selector: 'bsng-datepicker',
+  templateUrl: './bsng-datepicker.component.html',
+  styleUrls: ['./bsng-datepicker.component.scss']
 })
-export class NgDatepickerComponent implements OnInit {
+export class BsngDatepickerComponent implements OnInit {
   @Input() format = 'MM.DD.YYYY';
   @Input() daysOfWeekDisabled: number[] = [];
   @Input() selectedDate: string | null = null;

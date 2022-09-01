@@ -1,7 +1,7 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
-  name: 'displayTime'
+  name: 'bsngDisplayTime'
 })
 export class DisplayTimePipe implements PipeTransform {
   transform(value: number): unknown {
