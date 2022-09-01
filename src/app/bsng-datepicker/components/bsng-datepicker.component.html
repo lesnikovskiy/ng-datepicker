@@ -26,7 +26,7 @@
               <div class="calendar__date"
                 [ngClass]="{'today': day.today, 'selected': day.selected, 'disabled': day.disabled, 'diff-month': !isSelectedMonth(day)}"
                 (click)="selectDate(day, $event)">
-                <span class="calendar__number">{{ day.mDate.date() }}</span>
+                <span class="calendar__number">{{ day.momentDate.date() }}</span>
               </div>
             </ng-container>
           </div>

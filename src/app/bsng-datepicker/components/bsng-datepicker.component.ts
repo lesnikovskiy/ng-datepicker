@@ -110,14 +110,14 @@ export class BsngDatepickerComponent implements OnInit {
   }
 
   isSelectedMonth(date: CalendarDate): boolean {
-    return moment(date.mDate).isSame(this.selectedMonth, 'month');
+    return moment(date.momentDate).isSame(this.selectedMonth, 'month');
   }
 
   selectDate(date: CalendarDate, event: Event) {
     event.preventDefault();
     event.stopPropagation();
 
-    this.currentDate = date.mDate;
+    this.currentDate = moment(date.momentDate);
     this.selectedDate = moment(this.currentDate).format(this.format);
     this.dateSelected.emit(this.selectedDate);
 
@@ -154,14 +154,15 @@ export class BsngDatepickerComponent implements OnInit {
     const startCalendar = firstDayOfGrid.date();
     const endCalendar = startCalendar + lastDayOfGrid.diff(firstDayOfGrid, 'days');
 
-    return this.getRange(startCalendar, endCalendar).map((date) => {
-      const newDate = moment(firstDayOfGrid).date(date);
+    return this.getRange(startCalendar, endCalendar).map((date): CalendarDate => {
+      const momentDate = moment(firstDayOfGrid).date(date);
+
       return {
-        today: this.isToday(newDate),
-        selected: this.isSelected(newDate),
-        mDate: newDate,
-        wDay: moment(newDate).day(),
-        disabled: this.isDisabled(newDate)
+        today: this.isToday(momentDate),
+        selected: this.isSelected(momentDate),
+        momentDate,
+        weekDay: moment(momentDate).day(),
+        disabled: this.isDisabled(momentDate)
       };
     });
   }
