@@ -1,8 +1,11 @@
 .time-control-container {
+  display: flex;
+  justify-content: center;
   height: 100%;
 
   .timer-container {
     display: flex;
+    width: 100%;
     height: 100%;
 
     .separator {
@@ -49,14 +52,20 @@
     }
   }
 
-  .select-hour-container,
-  .select-minute-container {
-    width: 24rem;
+  .time-units {
     height: 100%;
     display: flex;
     flex-wrap: wrap;
     align-items: center;
     justify-content: space-around;
+
+    &.hour-units {
+      width: 24rem;
+    }
+
+    &.minute-units {
+      width: 16rem;
+    }
 
     .time-unit-button {
       & > button {

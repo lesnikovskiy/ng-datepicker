@@ -100,6 +100,16 @@ export class BsngDatepickerComponent implements OnInit {
     this.timeChanged();
   }
 
+  addHour(hour: number) {
+    this.currentDate = moment(this.currentDate).set('hour', hour);
+    this.timeChanged();
+  }
+
+  addMinite(minute: number) {
+    this.currentDate = moment(this.currentDate).set('minute', minute);
+    this.timeChanged();
+  }
+
   isDisabledMonth(currentDate: moment.Moment): boolean {
     const today = moment();
     return moment(currentDate).isBefore(today, 'months');

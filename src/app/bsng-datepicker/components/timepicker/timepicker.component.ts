@@ -38,10 +38,36 @@ export class TimepickerComponent {
     event.preventDefault();
     event.stopPropagation();
 
+    this.timerVisible = false;
+    this.selectHourVisible = false;
+    this.selectMinuteVisible = true;
+
     this.minutesRange = this.getMinutesRange();
   }
 
-  getHoursRange(): number[] {
+  addHourClick(hour: number, event: Event) {
+    event.preventDefault();
+    event.stopPropagation();
+
+    this.selectHourVisible = false;
+    this.selectMinuteVisible = false;
+    this.timerVisible = true;
+
+    this.addHour.emit(hour);
+  }
+
+  addMinuteClick(minute: number, event: Event) {
+    event.preventDefault();
+    event.stopPropagation();
+
+    this.selectHourVisible = false;
+    this.selectMinuteVisible = false;
+    this.timerVisible = true;
+
+    this.addMinute.emit(minute);
+  }
+
+  private getHoursRange(): number[] {
     const result = [];
 
     for (let i = 0; i < 24; i++) {
@@ -51,11 +77,13 @@ export class TimepickerComponent {
     return result;
   }
 
-  getMinutesRange(): number[] {
+  private getMinutesRange(): number[] {
     const result = [];
 
-    for (let i = 0; i < 60; i + 5) {
+    let i = 0;
+    while(i < 60) {
       result.push(i);
+      i += 5
     }
 
     return result;
