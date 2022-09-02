@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { BsngMinuteRange } from '../../models/range.type';
-import * as moment from 'moment';
+import { getHours, getMinutes } from 'date-fns';
 
 @Component({
   selector: 'bsng-timepicker',
@@ -8,7 +8,7 @@ import * as moment from 'moment';
   styleUrls: ['./timepicker.component.scss']
 })
 export class TimepickerComponent {
-  @Input() currentDate!: moment.Moment;
+  @Input() currentDate!: Date;
   @Input() minuteStep: BsngMinuteRange = 30;
 
   @Output() incrementHours = new EventEmitter();
@@ -67,6 +67,14 @@ export class TimepickerComponent {
     this.timerVisible = true;
 
     this.addMinute.emit(minute);
+  }
+
+  getDateHours(date: Date): number {
+    return getHours(date);
+  }
+
+  getDateMinutes(date: Date): number {
+    return getMinutes(date);
   }
 
   private getHoursRange(): number[] {

@@ -12,7 +12,7 @@
       <div class="calendar__navs">
         <div class="calendar__month-nav">
           <button [disabled]="isPrevDisabled" class="glyphicon glyphicon-chevron-left calendar__nav-btn" (click)="prevMonth()"></button>
-          <span>{{ selectedMonth.format('MMMM') }} {{ selectedMonth.format('YYYY') }}</span>
+          <span>{{ selectedMonthName }} {{ selectedMonthYear }}</span>
           <button [disabled]="isNextDisabled" class="glyphicon glyphicon-chevron-right calendar__nav-btn" (click)="nextMonth()"></button>
         </div>
       </div>
@@ -26,7 +26,7 @@
               <div class="calendar__date"
                 [ngClass]="{'today': day.today, 'selected': day.selected, 'disabled': day.disabled, 'diff-month': !isSelectedMonth(day)}"
                 (click)="selectDate(day, $event)">
-                <span class="calendar__number">{{ day.momentDate.date() }}</span>
+                <span class="calendar__number">{{ day.weekDay }}</span>
               </div>
             </ng-container>
           </div>

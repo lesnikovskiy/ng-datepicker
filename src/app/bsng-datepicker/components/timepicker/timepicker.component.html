@@ -2,7 +2,7 @@
   <div *ngIf="timerVisible" class="timer-container">
     <div class="time-control">
       <a (click)="incrementHours.emit()" title="Increment Hour" class="glyphicon glyphicon-chevron-up" role="button"></a>
-      <button (click)="showHourRangeView($event)" title="Pick Hour">{{ currentDate.hours() | bsngDisplayTime }}</button>
+      <button (click)="showHourRangeView($event)" title="Pick Hour">{{ getDateHours(currentDate) | bsngDisplayTime }}</button>
       <a (click)="decrementHours.emit()" title="Decrement Hour" class="glyphicon glyphicon-chevron-down"
         role="button"></a>
     </div>
@@ -10,7 +10,7 @@
     <div class="time-control">
       <a (click)="incrementMinutes.emit()" title="Increment Minute" class="glyphicon glyphicon-chevron-up"
         role="button"></a>
-      <button (click)="showMinuteRangView($event)" title="Pick Minute">{{ currentDate.minutes() | bsngDisplayTime }}</button>
+      <button (click)="showMinuteRangView($event)" title="Pick Minute">{{ getDateMinutes(currentDate) | bsngDisplayTime }}</button>
       <a (click)="decrementMinutes.emit()" title="Decrement Minute" class="glyphicon glyphicon-chevron-down"
         role="button"></a>
     </div>

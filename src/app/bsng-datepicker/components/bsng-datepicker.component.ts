@@ -1,7 +1,7 @@
 import { Component, ElementRef, EventEmitter, HostListener, Input, OnInit, Output } from '@angular/core';
 import { CalendarDate } from '../models/calendar-date.model';
 import { BsngMinuteRange } from '../models/range.type';
-import * as moment from 'moment';
+import { addDays, addHours, addMinutes, addMonths, eachDayOfInterval, endOfMonth, endOfWeek, format, getDay, isAfter, isBefore, isSameDay, isSameMonth, isToday, parse, setHours, setMinutes, startOfMonth, startOfToday, startOfWeek, subDays, subHours, subMinutes, subMonths } from 'date-fns';
 
 @Component({
   selector: 'bsng-datepicker',
@@ -9,7 +9,7 @@ import * as moment from 'moment';
   styleUrls: ['./bsng-datepicker.component.scss']
 })
 export class BsngDatepickerComponent implements OnInit {
-  @Input() format = 'MM.DD.YYYY';
+  @Input() format = 'MM.dd.yyyy';
   @Input() daysOfWeekDisabled: number[] = [];
   @Input() selectedDate: string | null = null;
   @Input() minDate: string | null = null;
@@ -19,29 +19,37 @@ export class BsngDatepickerComponent implements OnInit {
 
   @Output() dateSelected = new EventEmitter<string>();
 
-  currentDate!: moment.Moment;
-  selectedMonth!: moment.Moment;
+  currentDate!: Date;
+  selectedMonth!: Date;
   namesOfDays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
   weeks: Array<CalendarDate[]> = [];
 
   show = false;
   isPrevDisabled = false;
   isNextDisabled = false;
-  
-  private minDateMoment: moment.Moment | null = null;
-  private maxDateMoment: moment.Moment | null = null;
+
+  private minDateDate: Date | null = null;
+  private maxDateDate: Date | null = null;
 
   constructor(
     private elementRef: ElementRef
   ) { }
 
   ngOnInit() {
-    this.currentDate = this.selectedDate ? moment(this.selectedDate, this.format) : moment();
-    this.selectedMonth = moment(this.currentDate);
-    this.minDateMoment = moment(this.minDate, this.format);
-    this.maxDateMoment = moment(this.maxDate, this.format);
+    this.currentDate = this.selectedDate ? parse(this.selectedDate, this.format, new Date(), { weekStartsOn: 1 }) : new Date();
+    this.selectedMonth = this.currentDate;
+    this.minDateDate = this.minDate ? parse(this.minDate, this.format, new Date(), { weekStartsOn: 1 }) : null;
+    this.maxDateDate = this.maxDate ? parse(this.maxDate, this.format, new Date(), { weekStartsOn: 1 }) : null;
 
     this.renderCalendar();
+  }
+
+  get selectedMonthName(): string {
+    return format(this.selectedMonth, 'MMMM', { weekStartsOn: 1 });
+  }
+
+  get selectedMonthYear(): string {
+    return format(this.selectedMonth, 'yyyy', { weekStartsOn: 1 })
   }
 
   @HostListener('document:click', ['$event'])
@@ -59,66 +67,65 @@ export class BsngDatepickerComponent implements OnInit {
   }
 
   prevMonth(): void {
-    this.selectedMonth = moment(this.selectedMonth).subtract(1, 'months');
+    this.selectedMonth = subMonths(this.selectedMonth, 1);
     this.checkNavButtonsDisabled();
     this.renderCalendar();
   }
 
   nextMonth(): void {
-    this.selectedMonth = moment(this.selectedMonth).add(1, 'months');
+    this.selectedMonth = addMonths(this.selectedMonth, 1);
     this.checkNavButtonsDisabled();
     this.renderCalendar();
   }
 
   incrementHours() {
-    let next = moment(this.currentDate).add(1, 'hour');
+    let next = addHours(this.currentDate, 1);
     this.setIncrementDate(next);
     this.timeChanged();
   }
 
   decrementHours() {
-    let prev = moment(this.currentDate).subtract(1, 'hour');
+    let prev = subHours(this.currentDate, 1);
     this.setDecrementDate(prev);
     this.timeChanged();
   }
 
   incrementMinutes() {
-    const next = moment(this.currentDate).add(this.minuteStep, 'minutes');
+    const next = addMinutes(this.currentDate, this.minuteStep);
     this.setIncrementDate(next);
     this.timeChanged();
   }
 
   decrementMinutes() {
-    const prev = moment(this.currentDate).subtract(this.minuteStep, 'minutes');
+    const prev = subMinutes(this.currentDate, this.minuteStep);
     this.setDecrementDate(prev);
     this.timeChanged();
   }
 
   addHour(hour: number) {
-    this.currentDate = moment(this.currentDate).set('hour', hour);
+    this.currentDate = setHours(this.currentDate, hour);
     this.timeChanged();
   }
 
   addMinite(minute: number) {
-    this.currentDate = moment(this.currentDate).set('minute', minute);
+    this.currentDate = setMinutes(this.currentDate, minute);
     this.timeChanged();
   }
 
-  isDisabledMonth(currentDate: moment.Moment): boolean {
-    const today = moment();
-    return moment(currentDate).isBefore(today, 'months');
+  isDisabledMonth(currentDate: Date): boolean {
+    return isSameMonth(currentDate, startOfToday());
   }
 
   isSelectedMonth(date: CalendarDate): boolean {
-    return moment(date.momentDate).isSame(this.selectedMonth, 'month');
+    return isSameMonth(this.selectedMonth, date.date);
   }
 
   selectDate(date: CalendarDate, event: Event) {
     event.preventDefault();
     event.stopPropagation();
 
-    this.currentDate = moment(date.momentDate);
-    this.selectedDate = moment(this.currentDate).format(this.format);
+    this.currentDate = date.date;
+    this.selectedDate = format(this.currentDate, this.format, { weekStartsOn: 1 });
     this.dateSelected.emit(this.selectedDate);
 
     this.show = this.isDateTime ? true : false;
@@ -127,14 +134,14 @@ export class BsngDatepickerComponent implements OnInit {
   }
 
   private timeChanged() {
-    this.selectedDate = moment(this.currentDate).format(this.format);
+    this.selectedDate = format(this.currentDate, this.format, { weekStartsOn: 1 });
     this.dateSelected.emit(this.selectedDate);
 
     this.renderCalendar();
   }
 
   private renderCalendar(): void {
-    const dates = this.fillDates(this.selectedMonth);
+    const dates = this.fillDates();
     const weeks = [];
 
     while (dates.length > 0) {
@@ -144,100 +151,78 @@ export class BsngDatepickerComponent implements OnInit {
     this.weeks = weeks;
   }
 
-  private fillDates(currentMoment: moment.Moment) {
-    const firstOfMonth = moment(currentMoment).startOf('month').day();
-    const lastOfMonth = moment(currentMoment).endOf('month').day();
-
-    const firstDayOfGrid = moment(currentMoment).startOf('month').subtract(firstOfMonth - 1, 'days');
-    const lastDayOfGrid = moment(currentMoment).endOf('month').subtract(lastOfMonth - 1, 'days').add(7, 'days');
-
-    const startCalendar = firstDayOfGrid.date();
-    const endCalendar = startCalendar + lastDayOfGrid.diff(firstDayOfGrid, 'days');
-
-    return this.getRange(startCalendar, endCalendar).map((date): CalendarDate => {
-      const momentDate = moment(firstDayOfGrid).date(date);
-
-      return {
-        today: this.isToday(momentDate),
-        selected: this.isSelected(momentDate),
-        momentDate,
-        weekDay: moment(momentDate).day(),
-        disabled: this.isDisabled(momentDate)
-      };
+  private fillDates(): CalendarDate[] {
+    const dates = eachDayOfInterval({
+      start: startOfWeek(startOfMonth(this.selectedMonth), {
+        weekStartsOn: 1
+      }),
+      end: endOfWeek(endOfMonth(this.selectedMonth), {
+        weekStartsOn: 1
+      })
     });
+
+    return dates.map((date) => ({
+      today: isToday(date),
+      selected: this.isSelected(date),
+      date,
+      weekDay: format(date, 'd'),
+      disabled: this.isDisabled(date)
+    }));
   }
 
   private checkNavButtonsDisabled() {
-    if (this.minDateMoment != null) {
-      this.isPrevDisabled = this.minDateMoment.month() === this.selectedMonth.month();
+    if (this.minDateDate != null) {
+      this.isPrevDisabled = isSameMonth(this.minDateDate, this.selectedMonth);
     }
 
-    if (this.maxDateMoment != null) {
-      this.isNextDisabled = this.maxDateMoment.month() === this.selectedMonth.month();
+    if (this.maxDateDate != null) {
+      this.isNextDisabled = isSameMonth(this.maxDateDate, this.selectedMonth);
     }
   }
 
-  private setIncrementDate(next: moment.Moment) {
-    while (this.daysOfWeekDisabled.includes(next.day())) {
-      next = moment(next).add(1, 'day');
+  private setIncrementDate(next: Date) {
+    while (this.daysOfWeekDisabled.includes(getDay(next))) {
+      next = addDays(next, 1);
     }
 
-    if (this.maxDateMoment == null || !next.isAfter(this.maxDateMoment)) {
-      this.currentDate = moment(next);
+    if (this.maxDateDate == null || !isAfter(next, this.maxDateDate)) {
+      this.currentDate = next;
 
-      if (next.month() !== this.selectedMonth.month()) {
-        this.selectedMonth = moment(next);
+      if (!isSameMonth(this.selectedMonth, next)) {
+        this.selectedMonth = next;
       }
     }
   }
 
-  private setDecrementDate(prev: moment.Moment) {
-    while(this.daysOfWeekDisabled.includes(prev.day())) {
-      prev = moment(prev).subtract(1, 'day');
+  private setDecrementDate(prev: Date) {
+    while (this.daysOfWeekDisabled.includes(getDay(prev))) {
+      prev = subDays(prev, 1);
     }
 
-    if(this.minDateMoment == null || !prev.isBefore(this.minDateMoment)) {
-      this.currentDate = moment(prev);
+    if (this.minDateDate == null || !isBefore(prev, this.minDateDate)) {
+      this.currentDate = prev;
 
-      if (prev.month() !== this.selectedMonth.month()) {
-        this.selectedMonth = moment(prev);
+      if (!isSameMonth(this.selectedMonth, prev)) {
+        this.selectedMonth = prev;
       }
     }
   }
 
-  private isToday(date: moment.Moment): boolean {
-    return moment().isSame(moment(date), 'day');
+  private isSelected(date: Date): boolean {
+    return isSameDay(date, this.currentDate);
   }
 
-  private isSelected(date: moment.Moment): boolean {
-    return date.isSame(this.currentDate, 'date');
-  }
-
-  private isDisabled(date: moment.Moment) {
-    const day = moment(date).day();
+  private isDisabled(date: Date) {
+    const day = getDay(date);
     if (this.daysOfWeekDisabled.includes(day))
       return true;
 
-    if (this.minDateMoment != null && date.isBefore(this.minDateMoment))
+    if (this.minDateDate != null && isBefore(date, this.minDateDate))
       return true;
 
-    if (this.maxDateMoment != null && date.isAfter(this.maxDateMoment))
+    if (this.maxDateDate != null && isAfter(date, this.maxDateDate))
       return true;
 
     return false;
-  }
-
-  private getRange(from: number, to: number): number[] {
-    const result = [];
-
-    for (let i = from; i < to; i++) {
-      result.push(i);
-    }
-
-    return result;
-  }
-
-  private fixTimeZero(hours: number): string {
-    return hours <= 0 || hours <= 9 ? `0${hours}` : `${hours}`;
   }
 }
