@@ -27,6 +27,26 @@ export class YearpickerComponent implements OnChanges {
     }
   }
 
+  get yearRange(): string {
+    return `Range to be here`;
+  }
+
+  get isPrevDisabled(): boolean {
+    return false;
+  }
+
+  get isNextDisabled(): boolean {
+    return false;
+  }
+
+  prevYearRange() {
+
+  }
+
+  nextYearRange() {
+
+  }
+
   selectYear(year: Date, event: Event) {
     event.preventDefault();
     event.stopPropagation();

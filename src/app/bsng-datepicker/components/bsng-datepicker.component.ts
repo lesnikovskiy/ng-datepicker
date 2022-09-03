@@ -51,12 +51,12 @@ export class BsngDatepickerComponent implements OnInit {
     this.renderCalendar();
   }
 
-  get selectedMonthName(): string {
-    return format(this.selectedMonth, 'MMMM', { weekStartsOn: 1 });
+  get selectedMonthButtonText(): string {
+    return `${format(this.selectedMonth, 'MMMM', { weekStartsOn: 1 })} ${format(this.selectedYear, 'yyyy', { weekStartsOn: 1 })}`;
   }
 
   get selectedMonthYear(): string {
-    return format(this.selectedYear, 'yyyy', { weekStartsOn: 1 })
+    return format(this.selectedYear, 'yyyy', { weekStartsOn: 1 });
   }
 
   @HostListener('document:click', ['$event'])

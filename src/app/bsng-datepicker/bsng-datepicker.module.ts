@@ -6,9 +6,10 @@ import { TimepickerComponent } from './components/timepicker/timepicker.componen
 import { MonthpickerComponent } from './components/monthpicker/monthpicker.component';
 import { DisplayTimePipe } from './pipes/display-time.pipe';
 import { YearpickerComponent } from './components/yearpicker/yearpicker.component';
+import { NavigationComponent } from './components/navigation/navigation.component';
 
 @NgModule({
-  declarations: [BsngDatepickerComponent, TimepickerComponent, DisplayTimePipe, MonthpickerComponent, YearpickerComponent],
+  declarations: [BsngDatepickerComponent, TimepickerComponent, DisplayTimePipe, MonthpickerComponent, YearpickerComponent, NavigationComponent],
   exports: [BsngDatepickerComponent],
   imports: [
     CommonModule,

@@ -1,3 +1,6 @@
+<bsng-navigation [buttonText]="yearRange" [isPrevDisabled]="isPrevDisabled" [isNextDisabled]="isNextDisabled"
+  (prev)="prevYearRange()" (next)="nextYearRange()">
+</bsng-navigation>
 <div>
   <button *ngFor="let y of yearList" class="year-btn" [class.active]="y.isActive" (click)="selectYear(y.date, $event)">
     {{ y.display }}
