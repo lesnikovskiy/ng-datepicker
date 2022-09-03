@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
-import { addYears, eachYearOfInterval, format, isSameYear, subYears } from 'date-fns';
+import { addYears, eachYearOfInterval, format, getYear, isAfter, isBefore, isSameYear, subYears } from 'date-fns';
 
 export interface Year {
   date: Date,
@@ -16,35 +16,39 @@ export interface Year {
 export class YearpickerComponent implements OnChanges {
   @Input() currentDate!: Date;
   @Input() selectedYear!: Date;
+  @Input() minDate: Date | null = null;
+  @Input() maxDate: Date | null = null;
 
   @Output() selectedYearChange = new EventEmitter<Date>()
 
+  yearRangeText = '';
   yearList: Year[] = [];
+
+  private currentSelectedYear!: Date;
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['selectedYear'] != null) {
-      this.yearList = this.getYearList();
+      this.currentSelectedYear = this.selectedYear;
+      this.renderYearView();
     }
   }
 
-  get yearRange(): string {
-    return `Range to be here`;
-  }
-
   get isPrevDisabled(): boolean {
-    return false;
+    return this.yearList[0].isDisabled;
   }
 
   get isNextDisabled(): boolean {
-    return false;
+    return this.yearList[this.yearList.length-1].isDisabled;
   }
 
   prevYearRange() {
-
+    this.currentSelectedYear = subYears(this.currentSelectedYear, 12);
+    this.renderYearView();
   }
 
   nextYearRange() {
-
+    this.currentSelectedYear = addYears(this.currentSelectedYear, 12);
+    this.renderYearView();
   }
 
   selectYear(year: Date, event: Event) {
@@ -54,17 +58,34 @@ export class YearpickerComponent implements OnChanges {
     this.selectedYearChange.emit(year);
   }
 
+  private renderYearView() {
+    this.yearList = this.getYearList();
+    this.yearRangeText = `${format(this.yearList[0].date, 'yyyy')} - ${format(this.yearList[this.yearList.length - 1].date, 'yyyy')}`;
+  }
+
   private getYearList(): Year[] {
     const years = eachYearOfInterval({
-      start: subYears(this.selectedYear, 5),
-      end: addYears(this.selectedYear, 6)
+      start: subYears(this.currentSelectedYear, 5),
+      end: addYears(this.currentSelectedYear, 6)
     });
     
     return years.map(y => ({
       date: y,
       display: format(y, 'yyyy'),
-      isActive: isSameYear(this.selectedYear, y),
-      isDisabled: false //todo: implement disabled logic from min/max date
+      isActive: isSameYear(this.currentSelectedYear, y),
+      isDisabled: this.isDisabled(y)
     }));
+  }
+
+  private isDisabled(date: Date): boolean {
+    if (this.minDate != null && isBefore(getYear(date), getYear(this.minDate))) {
+      return true;
+    }
+
+    if (this.maxDate != null && isAfter(getYear(date), getYear(this.maxDate))) {
+      return true;
+    }
+
+    return false;
   }
 }

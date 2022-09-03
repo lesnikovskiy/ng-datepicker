@@ -33,8 +33,8 @@ export class BsngDatepickerComponent implements OnInit {
   monthListVisible = false;
   yearListVisible = false;
 
-  private minDateDate: Date | null = null;
-  private maxDateDate: Date | null = null;
+  minDateDate: Date | null = null;
+  maxDateDate: Date | null = null;
 
   constructor(
     private elementRef: ElementRef<HTMLElement>
@@ -53,10 +53,6 @@ export class BsngDatepickerComponent implements OnInit {
 
   get selectedMonthButtonText(): string {
     return `${format(this.selectedMonth, 'MMMM', { weekStartsOn: 1 })} ${format(this.selectedYear, 'yyyy', { weekStartsOn: 1 })}`;
-  }
-
-  get selectedMonthYear(): string {
-    return format(this.selectedYear, 'yyyy', { weekStartsOn: 1 });
   }
 
   @HostListener('document:click', ['$event'])
@@ -82,23 +78,14 @@ export class BsngDatepickerComponent implements OnInit {
     this.monthListVisible = true;
   }
 
-  selectYearFromList(event: Event) {
-    event.preventDefault();
-    event.stopPropagation();
+  selectYearFromList(date: Date) {
+    this.selectedYear = date;
 
     this.calendarMonthVisible = false;
     this.monthListVisible = false;
     this.yearListVisible = true;
   }
 
-  prevYear() {
-    this.selectedYear = subYears(this.selectedYear, 1);
-  }
-
-  nextYear() {
-    this.selectedYear = addYears(this.selectedYear, 1);
-  }
-  
   selectedMonthChange(month: Date) {
     this.selectedMonth = month;
 
@@ -238,7 +225,7 @@ export class BsngDatepickerComponent implements OnInit {
 
     const weekDays = eachDayOfInterval({
       start: startOfWeek(now, { weekStartsOn: 1 }),
-      end: endOfWeek(now, { weekStartsOn: 1})
+      end: endOfWeek(now, { weekStartsOn: 1 })
     });
 
     return weekDays.map(d => format(d, 'EEEEEE'));

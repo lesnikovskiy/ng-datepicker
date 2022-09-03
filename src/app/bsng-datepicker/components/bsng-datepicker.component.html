@@ -12,9 +12,6 @@
       <bsng-navigation *ngIf="calendarMonthVisible" [buttonText]="selectedMonthButtonText" [isPrevDisabled]="isPrevDisabled" [isNextDisabled]="isNextDisabled"
         (mainButtonClick)="selectMonthFromList($event)" (prev)="prevMonth()" (next)="nextMonth()">
       </bsng-navigation>
-      <bsng-navigation *ngIf="monthListVisible" [buttonText]="selectedMonthYear" [isPrevDisabled]="isPrevDisabled" [isNextDisabled]="isNextDisabled"
-        (mainButtonClick)="selectYearFromList($event)" (prev)="prevYear()" (next)="nextYear()">
-      </bsng-navigation>
       <div *ngIf="calendarMonthVisible" class="calendar-month">
         <div class="day-names">
           <div class="day-name" *ngFor="let name of namesOfDays">{{name}}</div>
@@ -32,10 +29,13 @@
         </div>
       </div>
       <div *ngIf="monthListVisible" class="month-list">
-        <bsng-monthpicker [currentDate]="currentDate" [selectedYear]="selectedYear" (selectedMonthChange)="selectedMonthChange($event)"></bsng-monthpicker>
+        <bsng-monthpicker [currentDate]="currentDate" [selectedYear]="selectedYear" [minDate]="minDateDate" [maxDate]="maxDateDate"
+          (selectYearFromList)="selectYearFromList($event)"
+          (selectedMonthChange)="selectedMonthChange($event)"></bsng-monthpicker>
       </div>
       <div *ngIf="yearListVisible" class="year-list">
-        <bsng-yearpicker [currentDate]="currentDate" [selectedYear]="selectedYear" (selectedYearChange)="selectedYearChange($event)"></bsng-yearpicker>
+        <bsng-yearpicker [currentDate]="currentDate" [selectedYear]="selectedYear" [minDate]="minDateDate" [maxDate]="maxDateDate"
+          (selectedYearChange)="selectedYearChange($event)"></bsng-yearpicker>
       </div>
     </div>
     <div *ngIf="isDateTime" class="date-time">

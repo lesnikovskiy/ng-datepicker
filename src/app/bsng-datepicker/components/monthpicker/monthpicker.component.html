@@ -1,5 +1,10 @@
+<bsng-navigation [buttonText]="selectedMonthYear" [isPrevDisabled]="isPrevDisabled"
+  [isNextDisabled]="isNextDisabled" (mainButtonClick)="mainButtonClick($event)" (prev)="prevYear()"
+  (next)="nextYear()">
+</bsng-navigation>
 <div>
-  <button *ngFor="let m of monthList" class="month-btn" [class.active]="m.isActive" (click)="selectMonthClick(m.month, $event)">
+  <button *ngFor="let m of monthList" class="month-btn" [class.active]="m.isActive"
+    (click)="selectMonthClick(m.month, $event)" [disabled]="m.isDisabled">
     {{ m.display }}
   </button>
 </div>
