@@ -1,7 +1,7 @@
 import { Component, ElementRef, EventEmitter, HostListener, Input, OnInit, Output } from '@angular/core';
 import { CalendarDate } from '../models/calendar-date.model';
 import { BsngMinuteRange } from '../models/range.type';
-import { addDays, addHours, addMinutes, addMonths, eachDayOfInterval, endOfMonth, endOfWeek, format, getDay, isAfter, isBefore, isSameDay, isSameMonth, isToday, parse, setHours, setMinutes, startOfMonth, startOfToday, startOfWeek, subDays, subHours, subMinutes, subMonths } from 'date-fns';
+import { addDays, addHours, addMinutes, addMonths, addWeeks, eachDayOfInterval, endOfMonth, endOfWeek, format, getDay, getISOWeek, isAfter, isBefore, isSameDay, isSameMonth, isToday, parse, setHours, setMinutes, startOfMonth, startOfToday, startOfWeek, subDays, subHours, subMinutes, subMonths } from 'date-fns';
 
 @Component({
   selector: 'bsng-datepicker',
@@ -142,6 +142,7 @@ export class BsngDatepickerComponent implements OnInit {
 
   private renderCalendar(): void {
     const dates = this.fillDates();
+    console.log(`dates in month: ${dates.length}`);
     const weeks = [];
 
     while (dates.length > 0) {
@@ -152,7 +153,7 @@ export class BsngDatepickerComponent implements OnInit {
   }
 
   private fillDates(): CalendarDate[] {
-    const dates = eachDayOfInterval({
+    let dates = eachDayOfInterval({
       start: startOfWeek(startOfMonth(this.selectedMonth), {
         weekStartsOn: 1
       }),
@@ -160,6 +161,18 @@ export class BsngDatepickerComponent implements OnInit {
         weekStartsOn: 1
       })
     });
+
+    debugger
+    if (dates.length === 35) {
+      const lastDay = dates[dates.length - 1];
+      const nextDay = addDays(lastDay, 1);
+      const additionalDates = eachDayOfInterval({
+        start: startOfWeek(nextDay, { weekStartsOn: 1 }),
+        end: endOfWeek(nextDay, { weekStartsOn: 1 })
+      });
+
+      dates = dates.concat(additionalDates);
+    }
 
     return dates.map((date) => ({
       today: isToday(date),

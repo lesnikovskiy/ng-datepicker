@@ -1,4 +1,4 @@
-<div class="calendar__wrapper">
+<div class="calendar-wrapper">
   <div class="form-group">
     <div class="input-group" (click)="toggleCalendar($event)">
       <input type="text" readonly ngDefaultControl class="form-control" [value]="selectedDate">
@@ -8,32 +8,32 @@
     </div>
   </div>
   <div *ngIf="show" class="calendar">
-    <div class="calendar__dates-only">
-      <div class="calendar__navs">
-        <div class="calendar__month-nav">
-          <button [disabled]="isPrevDisabled" class="glyphicon glyphicon-chevron-left calendar__nav-btn" (click)="prevMonth()"></button>
+    <div class="dates-only">
+      <div class="navs">
+        <div class="month-nav">
+          <button [disabled]="isPrevDisabled" class="glyphicon glyphicon-chevron-left nav-btn" (click)="prevMonth()"></button>
           <span>{{ selectedMonthName }} {{ selectedMonthYear }}</span>
-          <button [disabled]="isNextDisabled" class="glyphicon glyphicon-chevron-right calendar__nav-btn" (click)="nextMonth()"></button>
+          <button [disabled]="isNextDisabled" class="glyphicon glyphicon-chevron-right nav-btn" (click)="nextMonth()"></button>
         </div>
       </div>
-      <div class="calendar__month">
-        <div class="calendar__day-names">
-          <div class="calendar__day-name" *ngFor="let name of namesOfDays">{{name}}</div>
+      <div class="month">
+        <div class="day-names">
+          <div class="day-name" *ngFor="let name of namesOfDays">{{name}}</div>
         </div>
-        <div class="calendar__weeks">
-          <div class="calendar__week" *ngFor="let week of weeks">
+        <div class="weeks">
+          <div class="week" *ngFor="let week of weeks">
             <ng-container *ngFor="let day of week">
-              <div class="calendar__date"
+              <div class="date"
                 [ngClass]="{'today': day.today, 'selected': day.selected, 'disabled': day.disabled, 'diff-month': !isSelectedMonth(day)}"
                 (click)="selectDate(day, $event)">
-                <span class="calendar__number">{{ day.weekDay }}</span>
+                <span class="week-day">{{ day.weekDay }}</span>
               </div>
             </ng-container>
           </div>
         </div>
       </div>
     </div>
-    <div *ngIf="isDateTime" class="calendar__datetime">
+    <div *ngIf="isDateTime" class="date-time">
       <bsng-timepicker [currentDate]="currentDate" [minuteStep]="minuteStep" (incrementHours)="incrementHours()"
         (decrementHours)="decrementHours()" (incrementMinutes)="incrementMinutes()"
         (decrementMinutes)="decrementMinutes()" (addHour)="addHour($event)" (addMinute)="addMinite($event)"></bsng-timepicker>
