@@ -29,34 +29,35 @@
         border-top-left-radius: 3px;
         border-top-right-radius: 3px;
 
-        .nav-btn {
-          background-color: transparent;
-          border: none;
-          outline: none;
-          border-radius: 3px;
-          cursor: pointer;
-          padding: 5px 8px;
-
-          &:hover {
-            background: #eee;
-          }
-
-          &[disabled] {
-            color: transparent;
-            pointer-events: none;
-            user-select: none;
-            cursor: not-allowed;
-          }
-        }
-
         .month-nav {
           display: flex;
           justify-content: space-between;
           align-items: center;
           padding: 0 8px;
 
-          span {
-            line-height: 1;
+          .nav-btn {
+            flex-grow: 0;
+            background-color: transparent;
+            border: none;
+            outline: none;
+            border-radius: 3px;
+            cursor: pointer;
+            padding: 5px 8px;
+
+            &:hover {
+              background: #eee;
+            }
+
+            &[disabled] {
+              color: transparent;
+              pointer-events: none;
+              user-select: none;
+              cursor: not-allowed;
+            }
+          }
+
+          .select-month-btn {
+            flex-grow: 1;
           }
         }
       }

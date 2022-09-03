@@ -1,7 +1,7 @@
 import { Component, ElementRef, EventEmitter, HostListener, Input, OnInit, Output } from '@angular/core';
 import { CalendarDate } from '../models/calendar-date.model';
 import { BsngMinuteRange } from '../models/range.type';
-import { addDays, addHours, addMinutes, addMonths, addWeeks, eachDayOfInterval, endOfMonth, endOfWeek, format, getDay, getISOWeek, isAfter, isBefore, isSameDay, isSameMonth, isToday, parse, setHours, setMinutes, startOfMonth, startOfToday, startOfWeek, subDays, subHours, subMinutes, subMonths } from 'date-fns';
+import { addDays, addHours, addMinutes, addMonths, addWeeks, addYears, eachDayOfInterval, endOfMonth, endOfWeek, format, getDay, getISOWeek, isAfter, isBefore, isSameDay, isSameMonth, isToday, parse, setHours, setMinutes, startOfMonth, startOfToday, startOfWeek, subDays, subHours, subMinutes, subMonths, subYears } from 'date-fns';
 
 @Component({
   selector: 'bsng-datepicker',
@@ -69,6 +69,23 @@ export class BsngDatepickerComponent implements OnInit {
     event.stopPropagation();
 
     this.show = !this.show;
+  }
+
+  selectMonthFromList(event: Event) {
+    event.preventDefault();
+    event.stopPropagation();
+
+    this.calendarMonthVisible = false;
+    this.yearListVisible = false;
+    this.monthListVisible = true;
+  }
+
+  prevYear() {
+    this.selectedMonth = subYears(this.selectedMonth, 1);
+  }
+
+  nextYear() {
+    this.selectedMonth = addYears(this.selectedMonth, 1);
   }
 
   prevMonth(): void {
