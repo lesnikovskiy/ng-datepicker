@@ -20,7 +20,14 @@
           </ng-container>
           <ng-container *ngIf="monthListVisible">
             <button [disabled]="isPrevDisabled" class="glyphicon glyphicon-chevron-left nav-btn" (click)="prevYear()"></button>
-            <button class="nav-btn select-month-btn">
+            <button class="nav-btn select-month-btn" (click)="selectYearFromList($event)">
+              {{ selectedMonthYear }}
+            </button>
+            <button [disabled]="isNextDisabled" class="glyphicon glyphicon-chevron-right nav-btn" (click)="nextYear()"></button>
+          </ng-container>
+          <ng-container *ngIf="yearListVisible">
+            <button [disabled]="isPrevDisabled" class="glyphicon glyphicon-chevron-left nav-btn" (click)="prevYear()"></button>
+            <button class="nav-btn select-month-btn" (click)="selectYearFromList($event)">
               {{ selectedMonthYear }}
             </button>
             <button [disabled]="isNextDisabled" class="glyphicon glyphicon-chevron-right nav-btn" (click)="nextYear()"></button>
@@ -44,10 +51,10 @@
         </div>
       </div>
       <div *ngIf="monthListVisible" class="month-list">
-        <bsng-monthpicker [currentDate]="currentDate" [selectedMonth]="selectedMonth"></bsng-monthpicker>
+        <bsng-monthpicker [currentDate]="currentDate" [selectedYear]="selectedYear" (selectedMonthChange)="selectedMonthChange($event)"></bsng-monthpicker>
       </div>
       <div *ngIf="yearListVisible" class="year-list">
-
+        <bsng-yearpicker [currentDate]="currentDate" [selectedYear]="selectedYear" (selectedYearChange)="selectedYearChange($event)"></bsng-yearpicker>
       </div>
     </div>
     <div *ngIf="isDateTime" class="date-time">

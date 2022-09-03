@@ -1,7 +1,7 @@
 import { Component, ElementRef, EventEmitter, HostListener, Input, OnInit, Output } from '@angular/core';
 import { CalendarDate } from '../models/calendar-date.model';
 import { BsngMinuteRange } from '../models/range.type';
-import { addDays, addHours, addMinutes, addMonths, addWeeks, addYears, eachDayOfInterval, endOfMonth, endOfWeek, format, getDay, getISOWeek, isAfter, isBefore, isSameDay, isSameMonth, isToday, parse, setHours, setMinutes, startOfMonth, startOfToday, startOfWeek, subDays, subHours, subMinutes, subMonths, subYears } from 'date-fns';
+import { addDays, addHours, addMinutes, addMonths, addYears, eachDayOfInterval, endOfMonth, endOfWeek, format, getDay, isAfter, isBefore, isSameDay, isSameMonth, isToday, parse, setHours, setMinutes, startOfMonth, startOfToday, startOfWeek, subDays, subHours, subMinutes, subMonths, subYears } from 'date-fns';
 
 @Component({
   selector: 'bsng-datepicker',
@@ -21,6 +21,7 @@ export class BsngDatepickerComponent implements OnInit {
 
   currentDate!: Date;
   selectedMonth!: Date;
+  selectedYear!: Date;
   namesOfDays: string[] = [];
   weeks: Array<CalendarDate[]> = [];
 
@@ -42,6 +43,7 @@ export class BsngDatepickerComponent implements OnInit {
   ngOnInit() {
     this.currentDate = this.selectedDate ? parse(this.selectedDate, this.format, new Date(), { weekStartsOn: 1 }) : new Date();
     this.selectedMonth = this.currentDate;
+    this.selectedYear = this.currentDate;
     this.minDateDate = this.minDate ? parse(this.minDate, this.format, new Date(), { weekStartsOn: 1 }) : null;
     this.maxDateDate = this.maxDate ? parse(this.maxDate, this.format, new Date(), { weekStartsOn: 1 }) : null;
     this.namesOfDays = this.getWeekDayNames();
@@ -54,7 +56,7 @@ export class BsngDatepickerComponent implements OnInit {
   }
 
   get selectedMonthYear(): string {
-    return format(this.selectedMonth, 'yyyy', { weekStartsOn: 1 })
+    return format(this.selectedYear, 'yyyy', { weekStartsOn: 1 })
   }
 
   @HostListener('document:click', ['$event'])
@@ -80,12 +82,39 @@ export class BsngDatepickerComponent implements OnInit {
     this.monthListVisible = true;
   }
 
+  selectYearFromList(event: Event) {
+    event.preventDefault();
+    event.stopPropagation();
+
+    this.calendarMonthVisible = false;
+    this.monthListVisible = false;
+    this.yearListVisible = true;
+  }
+
   prevYear() {
-    this.selectedMonth = subYears(this.selectedMonth, 1);
+    this.selectedYear = subYears(this.selectedYear, 1);
   }
 
   nextYear() {
-    this.selectedMonth = addYears(this.selectedMonth, 1);
+    this.selectedYear = addYears(this.selectedYear, 1);
+  }
+  
+  selectedMonthChange(month: Date) {
+    this.selectedMonth = month;
+
+    this.calendarMonthVisible = true;
+    this.yearListVisible = false;
+    this.monthListVisible = false;
+
+    this.renderCalendar();
+  }
+
+  selectedYearChange(year: Date) {
+    this.selectedYear = year;
+
+    this.calendarMonthVisible = false;
+    this.yearListVisible = false;
+    this.monthListVisible = true;
   }
 
   prevMonth(): void {
@@ -164,7 +193,7 @@ export class BsngDatepickerComponent implements OnInit {
 
   private renderCalendar(): void {
     const dates = this.fillDates();
-    console.log(`dates in month: ${dates.length}`);
+
     const weeks = [];
 
     while (dates.length > 0) {

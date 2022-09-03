@@ -13,7 +13,7 @@ describe('MonthpickerComponent', () => {
 
     fixture = TestBed.createComponent(MonthpickerComponent);
     component = fixture.componentInstance;
-    component.selectedMonth = new Date();
+    component.selectedYear = new Date();
     fixture.detectChanges();
   });
 

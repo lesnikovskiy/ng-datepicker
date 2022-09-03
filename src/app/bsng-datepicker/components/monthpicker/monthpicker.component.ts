@@ -1,10 +1,11 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { eachMonthOfInterval, endOfYear, format, isSameMonth, startOfYear } from 'date-fns';
 
 export interface Month {
-  date: Date;
+  month: Date;
   display: string;
   isActive: boolean;
+  isDisabled: boolean;
 }
 
 @Component({
@@ -12,27 +13,38 @@ export interface Month {
   templateUrl: './monthpicker.component.html',
   styleUrls: ['./monthpicker.component.scss']
 })
-export class MonthpickerComponent implements OnInit {
+export class MonthpickerComponent implements OnChanges {
   @Input() currentDate!: Date;
-  @Input() selectedMonth!: Date;
+  @Input() selectedYear!: Date;
+
+  @Output() selectedMonthChange = new EventEmitter<Date>();
 
   monthList: Month[] = [];
 
-  ngOnInit() {
-    this.monthList = this.getMonthList();
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['selectedYear']) {
+      this.monthList = this.getMonthList();
+    }
   }
 
-  getMonthList(): Month[] {
+  selectMonthClick(month: Date, event: Event) {
+    event.preventDefault();
+    event.stopPropagation();
+
+    this.selectedMonthChange.emit(month)
+  }
+
+  private getMonthList(): Month[] {
     const list = eachMonthOfInterval({
-      start: startOfYear(this.selectedMonth),
-      end: endOfYear(this.selectedMonth)
+      start: startOfYear(this.selectedYear),
+      end: endOfYear(this.selectedYear)
     });
 
-    console.log(format(this.currentDate, 'dd.MM.yyyy'))
     return list.map(d => ({
-      date: d,
+      month: d,
       display: format(d, 'MMM'),
-      isActive: isSameMonth(d, this.currentDate)
+      isActive: isSameMonth(d, this.currentDate),
+      isDisabled: false //todo: implement disabled logic from min/max date
     }));
   }
 }

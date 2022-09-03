@@ -1,0 +1,5 @@
+<div>
+  <button *ngFor="let y of yearList" class="year-btn" [class.active]="y.isActive" (click)="selectYear(y.date, $event)">
+    {{ y.display }}
+  </button>
+</div>
