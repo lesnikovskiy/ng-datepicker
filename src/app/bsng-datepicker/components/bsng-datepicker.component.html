@@ -16,7 +16,7 @@
           <button [disabled]="isNextDisabled" class="glyphicon glyphicon-chevron-right nav-btn" (click)="nextMonth()"></button>
         </div>
       </div>
-      <div class="month">
+      <div *ngIf="calendarMonthVisible" class="calendar-month">
         <div class="day-names">
           <div class="day-name" *ngFor="let name of namesOfDays">{{name}}</div>
         </div>
@@ -31,6 +31,12 @@
             </ng-container>
           </div>
         </div>
+      </div>
+      <div *ngIf="monthListVisible" class="month-list">
+
+      </div>
+      <div *ngIf="yearListVisible" class="year-list">
+
       </div>
     </div>
     <div *ngIf="isDateTime" class="date-time">

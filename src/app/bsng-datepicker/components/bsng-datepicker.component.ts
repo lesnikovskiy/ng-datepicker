@@ -21,18 +21,22 @@ export class BsngDatepickerComponent implements OnInit {
 
   currentDate!: Date;
   selectedMonth!: Date;
-  namesOfDays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+  namesOfDays: string[] = [];
   weeks: Array<CalendarDate[]> = [];
 
   show = false;
   isPrevDisabled = false;
   isNextDisabled = false;
 
+  calendarMonthVisible = true;
+  monthListVisible = false;
+  yearListVisible = false;
+
   private minDateDate: Date | null = null;
   private maxDateDate: Date | null = null;
 
   constructor(
-    private elementRef: ElementRef
+    private elementRef: ElementRef<HTMLElement>
   ) { }
 
   ngOnInit() {
@@ -40,6 +44,7 @@ export class BsngDatepickerComponent implements OnInit {
     this.selectedMonth = this.currentDate;
     this.minDateDate = this.minDate ? parse(this.minDate, this.format, new Date(), { weekStartsOn: 1 }) : null;
     this.maxDateDate = this.maxDate ? parse(this.maxDate, this.format, new Date(), { weekStartsOn: 1 }) : null;
+    this.namesOfDays = this.getWeekDayNames();
 
     this.renderCalendar();
   }
@@ -54,7 +59,7 @@ export class BsngDatepickerComponent implements OnInit {
 
   @HostListener('document:click', ['$event'])
   clickOut(event: Event) {
-    if (!this.elementRef.nativeElement.contains(event.target)) {
+    if (!this.elementRef.nativeElement.contains(event.target as HTMLElement)) {
       this.show = false;
     }
   }
@@ -162,7 +167,6 @@ export class BsngDatepickerComponent implements OnInit {
       })
     });
 
-    debugger
     if (dates.length === 35) {
       const lastDay = dates[dates.length - 1];
       const nextDay = addDays(lastDay, 1);
@@ -181,6 +185,17 @@ export class BsngDatepickerComponent implements OnInit {
       weekDay: format(date, 'd'),
       disabled: this.isDisabled(date)
     }));
+  }
+
+  private getWeekDayNames() {
+    const now = new Date();
+
+    const weekDays = eachDayOfInterval({
+      start: startOfWeek(now, { weekStartsOn: 1 }),
+      end: endOfWeek(now, { weekStartsOn: 1})
+    });
+
+    return weekDays.map(d => format(d, 'EEEEEE'));
   }
 
   private checkNavButtonsDisabled() {
