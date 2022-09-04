@@ -34,11 +34,17 @@ export class YearpickerComponent implements OnChanges {
   }
 
   get isPrevDisabled(): boolean {
-    return this.yearList[0].isDisabled;
+    if (this.minDate == null) return false;
+
+    const prevYear = subYears(this.yearList[0].date, 1);
+    return isBefore(getYear(prevYear), getYear(this.minDate));
   }
 
   get isNextDisabled(): boolean {
-    return this.yearList[this.yearList.length-1].isDisabled;
+    if (this.maxDate == null) return false;
+
+    const nextYear = addYears(this.yearList[this.yearList.length-1].date, 1);
+    return isAfter(getYear(nextYear), getYear(this.maxDate));
   }
 
   prevYearRange() {
@@ -72,7 +78,7 @@ export class YearpickerComponent implements OnChanges {
     return years.map(y => ({
       date: y,
       display: format(y, 'yyyy'),
-      isActive: isSameYear(this.currentSelectedYear, y),
+      isActive: isSameYear(this.currentDate, y),
       isDisabled: this.isDisabled(y)
     }));
   }

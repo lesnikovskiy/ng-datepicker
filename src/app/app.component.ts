@@ -7,10 +7,15 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   dateTime = '';
+  dateTimeNoLimits = '';
   date = '';
 
   dateTimeSelected(date: string) {
     this.dateTime = date;
+  }
+
+  dateTimeNoLimsSelected(date: string) {
+    this.dateTimeNoLimits = date;
   }
 
   dateSelected(date: string) {

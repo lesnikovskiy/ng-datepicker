@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
-import { addYears, eachMonthOfInterval, endOfYear, format, getMonth, isAfter, isBefore, isSameMonth, startOfYear, subYears } from 'date-fns';
+import { addYears, eachMonthOfInterval, endOfYear, format, getMonth, getYear, isAfter, isBefore, isSameMonth, startOfYear, subYears } from 'date-fns';
 
 export interface Month {
   month: Date;
@@ -24,37 +24,49 @@ export class MonthpickerComponent implements OnChanges {
 
   monthList: Month[] = [];
 
+  private currentSelectedYear!: Date;
+
   ngOnChanges(changes: SimpleChanges) {
     if (changes['selectedYear']) {
+      this.currentSelectedYear = this.selectedYear;
       this.monthList = this.getMonthList();
     }
   }
 
   get selectedMonthYear(): string {
-    return format(this.selectedYear, 'yyyy', { weekStartsOn: 1 });
+    return format(this.currentSelectedYear, 'yyyy', { weekStartsOn: 1 });
   }
 
   get isPrevDisabled(): boolean {
-    return false;
+    if (this.minDate == null) return false;
+
+    const prevYear = subYears(this.currentSelectedYear, 1);
+    return isBefore(getYear(prevYear), getYear(this.minDate));
   }
 
   get isNextDisabled(): boolean {
-    return false;
+    if (this.maxDate == null) return false;
+
+    const nextYear = addYears(this.currentSelectedYear, 1);
+    return isAfter(getYear(nextYear), getYear(this.maxDate));
   }
 
   mainButtonClick(event: Event) {
     event.preventDefault();
     event.stopPropagation();
 
-    this.selectYearFromList.emit(this.selectedYear);
+    this.selectYearFromList.emit(this.currentSelectedYear);
   }
   
   prevYear() {
-    this.selectedYear = subYears(this.selectedYear, 1);
+    debugger
+    this.currentSelectedYear = subYears(this.currentSelectedYear, 1);
+    this.monthList = this.getMonthList();
   }
 
   nextYear() {
-    this.selectedYear = addYears(this.selectedYear, 1);
+    this.currentSelectedYear = addYears(this.currentSelectedYear, 1);
+    this.monthList = this.getMonthList();
   }
 
   selectMonthClick(month: Date, event: Event) {
@@ -66,8 +78,8 @@ export class MonthpickerComponent implements OnChanges {
 
   private getMonthList(): Month[] {
     const list = eachMonthOfInterval({
-      start: startOfYear(this.selectedYear),
-      end: endOfYear(this.selectedYear)
+      start: startOfYear(this.currentSelectedYear),
+      end: endOfYear(this.currentSelectedYear)
     });
 
     return list.map(d => ({
