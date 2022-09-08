@@ -1,11 +1,12 @@
 <div class="calendar-wrapper">
   <div class="input-group" (click)="toggleCalendar($event)">
-    <input type="text" ngDefaultControl class="form-control date-time-control" [value]="selectedDate"
-      [readonly]="!isDisabled" [disabled]="isDisabled">
-    <span *ngIf="!isClearable" class="input-group-addon" [class.disabled]="isDisabled">
+    <input type="text" ngDefaultControl class="form-control date-time-control" [class.has-error]="hasError"
+      [value]="selectedDate" [readonly]="isReadonly && !isDisabled" [disabled]="isDisabled"
+      (change)="dateInputChange($event)">
+    <span *ngIf="!isClearable" class="input-group-addon" [class.disabled]="isDisabled" [class.has-error]="hasError">
       <span class="glyphicon glyphicon-calendar"></span>
     </span>
-    <span *ngIf="isClearable" class="input-group-btn">
+    <span *ngIf="isClearable" class="input-group-btn" [class.has-error]="hasError">
       <button (click)="clearDate($event)" class="btn btn-default" title="Clear Date" [disabled]="isDisabled">
         <i class="fa fa-times" aria-hidden="true"></i>
       </button>
@@ -14,8 +15,9 @@
   <div *ngIf="show" class="calendar">
     <div class="dates-only">
       <bsns-calendar *ngIf="calendarMonthVisible" [currentDate]="currentDate" [selectedMonth]="selectedMonth"
-        [minDate]="minDateDate" [maxDate]="maxDateDate" [daysOfWeekDisabled]="daysOfWeekDisabled" [timelines]="timelines"
-        [isDateTime]="isDateTime" (selectMonthFromList)="selectMonthFromList()" (dateSelected)="selectDate($event)">
+        [minDate]="minDateDate" [maxDate]="maxDateDate" [daysOfWeekDisabled]="daysOfWeekDisabled"
+        [timelines]="timelines" [isDateTime]="isDateTime" (selectMonthFromList)="selectMonthFromList()"
+        (dateSelected)="selectDate($event)">
       </bsns-calendar>
       <bsng-monthpicker *ngIf="monthListVisible" [currentDate]="currentDate" [selectedYear]="selectedYear"
         [minDate]="minDateDate" [maxDate]="maxDateDate" (selectYearFromList)="selectYearFromList($event)"

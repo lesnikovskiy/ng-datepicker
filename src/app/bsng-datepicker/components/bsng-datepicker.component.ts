@@ -1,5 +1,5 @@
 import { Component, ElementRef, EventEmitter, HostListener, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
-import { format, parse } from 'date-fns';
+import { format, isValid, parse } from 'date-fns';
 import { TimelineModel } from '../models/timeline.model';
 
 @Component({
@@ -9,6 +9,7 @@ import { TimelineModel } from '../models/timeline.model';
 })
 export class BsngDatepickerComponent implements OnInit, OnChanges {
   @Input() format = 'MM.dd.yyyy';
+  @Input() isReadonly = true;
   @Input() isClearable = false;
   @Input() isDisabled = false;
   @Input() daysOfWeekDisabled: number[] = [];
@@ -26,6 +27,7 @@ export class BsngDatepickerComponent implements OnInit, OnChanges {
   selectedYear!: Date;
 
   show = false;
+  hasError = false;
 
   calendarMonthVisible = true;
   monthListVisible = false;
@@ -66,6 +68,8 @@ export class BsngDatepickerComponent implements OnInit, OnChanges {
     if (changes.isDisabled?.currentValue) {
       this.isDisabled = changes.isDisabled.currentValue;
     }
+
+    this.hasError = false;
   }
 
   @HostListener('document:click', ['$event'])
@@ -73,6 +77,16 @@ export class BsngDatepickerComponent implements OnInit, OnChanges {
     if (!this.elementRef.nativeElement.contains(event.target as HTMLElement)) {
       this.show = false;
     }
+  }
+
+  dateInputChange(event: Event) {
+    if (this.isReadonly) return;
+
+    const target = event.target as HTMLInputElement;
+
+    const date = parse(target.value, this.format, new Date(), { weekStartsOn: 1 });
+
+    this.setCurrentDate(date);
   }
 
   toggleCalendar(event: Event) {
@@ -128,6 +142,11 @@ export class BsngDatepickerComponent implements OnInit, OnChanges {
   }
 
   setCurrentDate(date: Date | null) {
+    const isDateValid = isValid(date);
+    this.hasError = !isDateValid;
+
+    if (!isDateValid) return;
+
     this.currentDate = date;
 
     this.selectedDate = this.currentDate != null
