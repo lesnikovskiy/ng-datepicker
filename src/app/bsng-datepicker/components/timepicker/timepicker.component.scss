@@ -73,11 +73,29 @@
         border: none;
         outline: none;
         padding: 10px;
+
+        &[disabled] {
+          color: #ccc;
+          pointer-events: none;
+          user-select: none;
+          cursor: not-allowed;
+          opacity: 0.7;
+    
+          &:hover {
+            background: transparent;
+          }
+        }
       }
 
       &:hover {
         background: #eee;
         border-radius: 5px;
+      }
+
+      &.disabled {
+        background: transparent;
+        pointer-events: none;
+        user-select: none;
       }
     }
   }

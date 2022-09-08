@@ -1,28 +1,28 @@
 <div class="time-control-container">
   <div *ngIf="timerVisible" class="timer-container">
     <div class="time-control">
-      <a (click)="incrementHours.emit()" title="Increment Hour" class="glyphicon glyphicon-chevron-up" role="button"></a>
-      <button (click)="showHourRangeView($event)" title="Pick Hour">{{ getDateHours(currentDate) | bsngDisplayTime }}</button>
-      <a (click)="decrementHours.emit()" title="Decrement Hour" class="glyphicon glyphicon-chevron-down"
+      <a (click)="incrementHours()" title="Increment Hour" class="glyphicon glyphicon-chevron-up" role="button"></a>
+      <button (click)="showHourRangeView($event)" title="Pick Hour">{{ getDateHours() }}</button>
+      <a (click)="decrementHours()" title="Decrement Hour" class="glyphicon glyphicon-chevron-down"
         role="button"></a>
     </div>
     <div class="separator">:</div>
     <div class="time-control">
-      <a (click)="incrementMinutes.emit()" title="Increment Minute" class="glyphicon glyphicon-chevron-up"
+      <a (click)="incrementMinutes()" title="Increment Minute" class="glyphicon glyphicon-chevron-up"
         role="button"></a>
-      <button (click)="showMinuteRangView($event)" title="Pick Minute">{{ getDateMinutes(currentDate) | bsngDisplayTime }}</button>
-      <a (click)="decrementMinutes.emit()" title="Decrement Minute" class="glyphicon glyphicon-chevron-down"
+      <button (click)="showMinuteRangView($event)" title="Pick Minute">{{ getDateMinutes() }}</button>
+      <a (click)="decrementMinutes()" title="Decrement Minute" class="glyphicon glyphicon-chevron-down"
         role="button"></a>
     </div>
   </div>
   <div *ngIf="selectHourVisible" class="time-units hour-units">
-    <div *ngFor="let h of hoursRange" class="time-unit-button">
-      <button (click)="addHourClick(h, $event)" role="button">{{ h | bsngDisplayTime }}</button>
+    <div *ngFor="let h of hoursRange" class="time-unit-button" [class.disabled]="h.isDisabled">
+      <button (click)="addHourClick(h.time, $event)" [disabled]="h.isDisabled" role="button">{{ h.displayTime }}</button>
     </div>
   </div>
   <div *ngIf="selectMinuteVisible" class="time-units minute-units">
-    <div *ngFor="let m of minutesRange" class="time-unit-button">
-      <button (click)="addMinuteClick(m, $event)" role="button">{{ m | bsngDisplayTime }}</button>
+    <div *ngFor="let m of minutesRange" class="time-unit-button" [class.disabled]="m.isDisabled">
+      <button (click)="addMinuteClick(m.time, $event)" [disabled]="m.isDisabled" role="button">{{ m.displayTime }}</button>
     </div>
   </div>
 </div>

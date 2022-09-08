@@ -1,3 +1,4 @@
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { YearpickerComponent } from './yearpicker.component';
@@ -8,7 +9,8 @@ describe('YearpickerComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [YearpickerComponent]
+      declarations: [YearpickerComponent],
+      schemas: [NO_ERRORS_SCHEMA]
     });
 
     fixture = TestBed.createComponent(YearpickerComponent);

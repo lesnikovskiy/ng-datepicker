@@ -1,0 +1,20 @@
+<bsng-navigation [buttonText]="selectedMonthButtonText" [isPrevDisabled]="isPrevDisabled"
+  [isNextDisabled]="isNextDisabled" (mainButtonClick)="selectMonthFromListClick($event)" (prev)="prevMonth()"
+  (next)="nextMonth()">
+</bsng-navigation>
+<div class="calendar-month">
+  <div class="day-names">
+    <div class="day-name" *ngFor="let name of namesOfDays">{{name}}</div>
+  </div>
+  <div class="weeks">
+    <div class="week" *ngFor="let week of weeks">
+      <ng-container *ngFor="let day of week">
+        <div class="date"
+          [ngClass]="{'today': day.today, 'selected': day.selected, 'disabled': day.disabled, 'diff-month': !isSelectedMonth(day)}"
+          (click)="selectDate(day, $event)">
+          <span class="week-day">{{ day.weekDay }}</span>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+</div>

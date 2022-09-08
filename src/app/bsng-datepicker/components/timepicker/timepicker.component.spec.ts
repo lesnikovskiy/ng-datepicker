@@ -3,7 +3,7 @@ import { By } from '@angular/platform-browser';
 
 import { TimepickerComponent } from './timepicker.component';
 import { DisplayTimePipe } from '../../pipes/display-time.pipe';
-import * as moment from 'moment';
+import { parse } from 'date-fns';
 
 describe('TimepickerComponent', () => {
   let component: TimepickerComponent;
@@ -16,7 +16,7 @@ describe('TimepickerComponent', () => {
 
     fixture = TestBed.createComponent(TimepickerComponent);
     component = fixture.componentInstance;
-    component.currentDate = moment('12.10.2022 09:30', 'DD.MM.YYYY HH:mm');
+    component.currentDate = parse('12.10.2022 09:30', 'dd.MM.yyyy HH:mm', new Date(), { weekStartsOn: 1 });
     fixture.detectChanges();
   });
 
@@ -28,7 +28,7 @@ describe('TimepickerComponent', () => {
     const timeButtons = fixture.debugElement.queryAll(By.css('.time-control button'));
 
     expect(timeButtons.length).toBe(2);
-    expect(timeButtons[0].nativeElement.textContent).toContain('09');
-    expect(timeButtons[1].nativeElement.textContent).toContain('30');
+    expect(timeButtons[0]?.nativeElement.textContent).toContain('09');
+    expect(timeButtons[1]?.nativeElement.textContent).toContain('30');
   });
 });

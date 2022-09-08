@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
-import { addYears, eachMonthOfInterval, endOfYear, format, getMonth, getYear, isAfter, isBefore, isSameMonth, startOfYear, subYears } from 'date-fns';
+import { addYears, eachMonthOfInterval, endOfMonth, endOfYear, format, getYear, isAfter, isBefore, isSameMonth, startOfMonth, startOfYear, subYears } from 'date-fns';
 
-export interface Month {
+interface Month {
   month: Date;
   display: string;
   isActive: boolean;
@@ -14,7 +14,7 @@ export interface Month {
   styleUrls: ['./monthpicker.component.scss']
 })
 export class MonthpickerComponent implements OnChanges {
-  @Input() currentDate!: Date;
+  @Input() currentDate: Date | null = null;
   @Input() selectedYear!: Date;
   @Input() minDate: Date | null = null;
   @Input() maxDate: Date | null = null;
@@ -27,8 +27,29 @@ export class MonthpickerComponent implements OnChanges {
   private currentSelectedYear!: Date;
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes['selectedYear']) {
-      this.currentSelectedYear = this.selectedYear;
+    let shouldUpdateList = false;
+
+    if (changes.currentDate?.currentValue) {
+      this.currentDate = changes.currentDate.currentValue;
+      shouldUpdateList = true;
+    }
+
+    if (changes.selectedYear?.currentValue) {
+      this.currentSelectedYear = changes.selectedYear.currentValue;
+      shouldUpdateList = true;
+    }
+
+    if (changes.minDate?.currentValue) {
+      this.minDate = changes.minDate.currentValue;
+      shouldUpdateList = true;
+    }
+
+    if (changes.maxDate?.currentValue) {
+      this.maxDate = changes.maxDate.currentValue;
+      shouldUpdateList = true;
+    }
+
+    if (shouldUpdateList) {
       this.monthList = this.getMonthList();
     }
   }
@@ -59,7 +80,6 @@ export class MonthpickerComponent implements OnChanges {
   }
   
   prevYear() {
-    debugger
     this.currentSelectedYear = subYears(this.currentSelectedYear, 1);
     this.monthList = this.getMonthList();
   }
@@ -84,18 +104,18 @@ export class MonthpickerComponent implements OnChanges {
 
     return list.map(d => ({
       month: d,
-      display: format(d, 'MMM'),
-      isActive: isSameMonth(d, this.currentDate),
+      display: format(d, 'MMM', { weekStartsOn: 1 }),
+      isActive: this.currentDate != null && isSameMonth(d, this.currentDate),
       isDisabled: this.isDisabled(d)
     }));
   }
 
   private isDisabled(date: Date): boolean {
-    if (this.minDate != null && isBefore(getMonth(date), getMonth(this.minDate))) {
+    if (this.minDate != null && isBefore(date, startOfMonth(this.minDate))) {
       return true;
     }
 
-    if (this.maxDate != null && isAfter(getMonth(date), getMonth(this.maxDate))) {
+    if (this.maxDate != null && isAfter(date, endOfMonth(this.maxDate))) {
       return true;
     }
 
