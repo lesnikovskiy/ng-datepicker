@@ -1,7 +1,8 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
-import { addDays, addMonths, eachDayOfInterval, endOfDay, endOfMonth, endOfWeek, format, getDay, isAfter, isBefore, isSameDay, isSameMonth, isToday, startOfDay, startOfMonth, startOfToday, startOfWeek, subMonths } from 'date-fns';
+import { addDays, addMonths, eachDayOfInterval, endOfDay, endOfMonth, endOfWeek, format, getDay, isAfter, isBefore, isSameDay, isSameMonth, isToday, isWithinInterval, startOfDay, startOfMonth, startOfToday, startOfWeek, subMonths } from 'date-fns';
+import { TimelineModel } from '../../models/timeline.model';
 
-interface CalendarDate {
+interface CalendarDay {
   date: Date;
   weekDay: string;
   selected: boolean;
@@ -21,12 +22,13 @@ export class CalendarComponent implements OnInit, OnChanges {
   @Input() isDateTime = false;
   @Input() minDate: Date | null = null;
   @Input() maxDate: Date | null = null;
+  @Input() timelines: TimelineModel[] = [];
 
   @Output() selectMonthFromList = new EventEmitter();
   @Output() dateSelected = new EventEmitter<Date>();
 
   namesOfDays: string[] = [];
-  weeks: CalendarDate[][] = [];
+  weeks: CalendarDay[][] = [];
 
   ngOnInit() {
     this.namesOfDays = this.getWeekDayNames();
@@ -36,7 +38,7 @@ export class CalendarComponent implements OnInit, OnChanges {
   ngOnChanges(changes: SimpleChanges) {
     let shouldRerenderCalendar = false;
 
-    if(changes.currentDate?.currentValue) {
+    if (changes.currentDate?.currentValue) {
       this.currentDate = changes.currentDate.currentValue;
       shouldRerenderCalendar = true;
     }
@@ -79,11 +81,21 @@ export class CalendarComponent implements OnInit, OnChanges {
     return `${format(this.selectedMonth, 'MMMM', { weekStartsOn: 1 })} ${format(this.selectedMonth, 'yyyy', { weekStartsOn: 1 })}`;
   }
 
+  getDayClassList(day: CalendarDay): Record<string, boolean> {
+    return {
+      'today': day.today,
+      'selected': day.selected,
+      'disabled': day.disabled,
+      'diff-month': !this.isSelectedMonth(day),
+      ...this.getTimelineClassList(day)
+    };
+  }
+
   isDisabledMonth(currentDate: Date): boolean {
     return isSameMonth(currentDate, startOfToday());
   }
 
-  isSelectedMonth(date: CalendarDate): boolean {
+  isSelectedMonth(date: CalendarDay): boolean {
     return isSameMonth(this.selectedMonth, date.date);
   }
 
@@ -94,7 +106,7 @@ export class CalendarComponent implements OnInit, OnChanges {
     this.selectMonthFromList.emit();
   }
 
-  selectDate({ date }: CalendarDate, event: Event) {
+  selectDate({ date }: CalendarDay, event: Event) {
     event.preventDefault();
     event.stopPropagation();
 
@@ -133,7 +145,7 @@ export class CalendarComponent implements OnInit, OnChanges {
     this.weeks = weeks;
   }
 
-  private fillDates(): CalendarDate[] {
+  private fillDates(): CalendarDay[] {
     let dates = eachDayOfInterval({
       start: startOfWeek(startOfMonth(this.selectedMonth), {
         weekStartsOn: 1
@@ -194,5 +206,19 @@ export class CalendarComponent implements OnInit, OnChanges {
     }
 
     return false;
+  }
+
+  private getTimelineClassList(day: CalendarDay): Record<string, boolean> {
+    if (this.timelines.length === 0) return Object.create({});
+
+    const classes = this.timelines
+      .map(t => {
+        return isWithinInterval(day.date, t.interval)
+          ? t.className
+          : null
+      })
+      .filter(q => q != null);
+
+    return classes.length ? Object.fromEntries(classes.map(o => [o, true])) : Object.create({});
   }
 }

@@ -1,5 +1,6 @@
 import { Component, ElementRef, EventEmitter, HostListener, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { format, parse } from 'date-fns';
+import { TimelineModel } from '../models/timeline.model';
 
 @Component({
   selector: 'bsng-datepicker',
@@ -16,6 +17,7 @@ export class BsngDatepickerComponent implements OnInit, OnChanges {
   @Input() maxDate: string | null = null;
   @Input() isDateTime = false;
   @Input() minuteStep: 1 | 5 | 10 | 15 | 20 | 30 = 30;
+  @Input() timelines: TimelineModel[] = [];
 
   @Output() dateSelected = new EventEmitter<string | null>();
 

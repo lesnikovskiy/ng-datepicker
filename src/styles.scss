@@ -1,0 +1,25 @@
+.rl-holiday {
+  background: red;
+  color: #fff;
+
+  &:hover {
+    background: rgb(252, 54, 54) !important;
+  }
+
+  &.selected {
+    background: orange !important;
+  }
+}
+
+.planning {
+  background: greenyellow;
+
+  &:hover {
+    background: rgb(196, 247, 119) !important;
+  }
+
+  &.selected {
+    background: rgb(139, 230, 4) !important;
+  }
+}
+

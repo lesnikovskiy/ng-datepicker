@@ -1,13 +1,13 @@
-
 <div class="date_picker_container">
   <h1>DateTime: {{ dateTime }}</h1>
-  <bsng-datepicker format="dd.MM.yyyy HH:mm" selectedDate="31.08.2022 09:00" minDate="12.07.2022 09:00" maxDate="12.10.2022 23:30"
-    [isDateTime]="true" [minuteStep]="30" [daysOfWeekDisabled]="[0]" (dateSelected)="dateTimeSelected($event)">
+  <bsng-datepicker format="dd.MM.yyyy HH:mm" selectedDate="31.08.2022 09:00" minDate="12.07.2022 09:00"
+    maxDate="12.10.2022 23:30" [isDateTime]="true" [minuteStep]="30" [daysOfWeekDisabled]="[0]"
+    (dateSelected)="dateTimeSelected($event)">
   </bsng-datepicker>
   <hr>
   <h3>DateTime no limits: {{ dateTimeNoLimits }}</h3>
-  <bsng-datepicker format="dd.MM.yyyy HH:mm" selectedDate="04.09.2022 09:00" minDate="01.01.2016 00:00" maxDate="31.12.2031 23:00"
-    [isDateTime]="true" [minuteStep]="10" (dateSelected)="dateTimeNoLimsSelected($event)">
+  <bsng-datepicker format="dd.MM.yyyy HH:mm" selectedDate="04.09.2022 09:00" [isDateTime]="true" [minuteStep]="10"
+    [timelines]="timelines" (dateSelected)="dateTimeNoLimsSelected($event)">
   </bsng-datepicker>
   <hr>
   <h1>Date: {{ date }}</h1>

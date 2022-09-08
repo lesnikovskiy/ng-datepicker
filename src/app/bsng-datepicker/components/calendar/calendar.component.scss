@@ -55,7 +55,7 @@
 
       &.disabled {
         pointer-events: none;
-        color: #e0e0e0 !important;
+        color: #e0e0e0;
       }
 
       &.diff-month {
@@ -64,7 +64,7 @@
 
       &.selected {
         color: #fff;
-        background-color: #47a2f1 !important;
+        background-color: #47a2f1;
         &:hover {
           &:after {
             opacity: 1;
