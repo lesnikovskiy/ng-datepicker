@@ -1,4 +1,4 @@
-import { Interval } from "date-fns";
+import { Interval } from 'date-fns';
 
 export interface TimelineModel {
   title: string;
