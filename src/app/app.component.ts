@@ -10,15 +10,15 @@ export class AppComponent {
   dateTimeNoLimits = '';
   date = '';
 
-  dateTimeSelected(date: string) {
-    this.dateTime = date;
+  dateTimeSelected(date: string | null) {
+    date && (this.dateTime = date);
   }
 
-  dateTimeNoLimsSelected(date: string) {
-    this.dateTimeNoLimits = date;
+  dateTimeNoLimsSelected(date: string | null) {
+    date && (this.dateTimeNoLimits = date);
   }
 
-  dateSelected(date: string) {
-    this.date = date;
+  dateSelected(date: string | null) {
+    date && (this.date = date);
   }
 }
