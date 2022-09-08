@@ -7,6 +7,12 @@
     "forceConsistentCasingInFileNames": true,
     // Strict Checks
     "strict": true,
+    "paths": {
+      "bsng-datepicker": [
+        "dist/bsng-datepicker/bsng-datepicker",
+        "dist/bsng-datepicker"
+      ]
+    },
     "alwaysStrict": true,
     "noImplicitAny": true,
     "strictNullChecks": true,

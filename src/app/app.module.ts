@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { BsngDatepickerModule } from './bsng-datepicker/bsng-datepicker.module';
+import { BsngDatepickerModule } from 'bsng-datepicker';
 
 import { AppComponent } from './app.component';
 

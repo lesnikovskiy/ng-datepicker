@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { TimelineModel } from './bsng-datepicker/models/timeline.model';
+import { TimelineModel } from 'bsng-datepicker';
 
 @Component({
   selector: 'app-root',
