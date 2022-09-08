@@ -30,15 +30,15 @@ export class AppComponent {
     }
   ];
 
-  dateTimeSelected(date: string | null) {
+  dateTimeSelected(date: string) {
     date && (this.dateTime = date);
   }
 
-  dateTimeNoLimsSelected(date: string | null) {
+  dateTimeNoLimsSelected(date: string) {
     date && (this.dateTimeNoLimits = date);
   }
 
-  dateSelected(date: string | null) {
+  dateSelected(date: string) {
     date && (this.date = date);
   }
 }

@@ -13,14 +13,14 @@ export class BsngDatepickerComponent implements OnInit, OnChanges {
   @Input() isClearable = false;
   @Input() isDisabled = false;
   @Input() daysOfWeekDisabled: number[] = [];
-  @Input() selectedDate: string | null = null;
-  @Input() minDate: string | null = null;
-  @Input() maxDate: string | null = null;
+  @Input() selectedDate: string | null | undefined = null;
+  @Input() minDate: string | null | undefined = null;
+  @Input() maxDate: string | null | undefined = null;
   @Input() isDateTime = false;
   @Input() minuteStep: 1 | 5 | 10 | 15 | 20 | 30 = 30;
   @Input() timelines: TimelineModel[] = [];
 
-  @Output() dateSelected = new EventEmitter<string | null>();
+  @Output() dateSelected = new EventEmitter<string>();
 
   currentDate: Date | null = null;
   selectedMonth!: Date;
@@ -153,6 +153,6 @@ export class BsngDatepickerComponent implements OnInit, OnChanges {
       ? format(this.currentDate, this.format, { weekStartsOn: 1 })
       : null;
 
-    this.dateSelected.emit(this.selectedDate);
+    this.selectedDate && this.dateSelected.emit(this.selectedDate);
   }
 }
