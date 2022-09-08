@@ -11,6 +11,10 @@
       "bsng-datepicker": [
         "dist/bsng-datepicker/bsng-datepicker",
         "dist/bsng-datepicker"
+      ],
+      "bsng-rangepicker": [
+        "dist/bsng-rangepicker/bsng-rangepicker",
+        "dist/bsng-rangepicker"
       ]
     },
     "alwaysStrict": true,

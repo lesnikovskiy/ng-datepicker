@@ -1,0 +1,39 @@
+.range-picker-container {
+  position: relative;
+  margin-bottom: 17px;
+
+  .range-picker-control {
+    background: #fff;
+    cursor: pointer;
+    height: 3.3rem;
+    line-height: 3.3rem;
+
+    &[disabled] {
+      background: #eee;
+      user-select: none;
+      cursor: not-allowed;
+    }
+  }
+
+  .input-group-addon {
+    cursor: pointer;
+
+    &.disabled {
+      cursor: not-allowed;
+    }
+  }
+
+  .calendar {
+    position: absolute;
+    top: 36px;
+    padding: 5px;
+    font-size: 13px;
+    background-color: #fff;
+    box-shadow: 0 4px 25px 0 rgba(0, 0, 0, 0.1), 0 4px 25px 0 rgba(0, 184, 178, 0.08);
+    border-radius: 4px;
+    z-index: 20;
+    user-select: none;
+    display: flex;
+    flex-direction: row;
+  }
+}

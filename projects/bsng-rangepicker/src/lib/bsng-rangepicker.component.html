@@ -1,0 +1,11 @@
+<div class="range-picker-container">
+  <div class="input-group" (click)="toggleCalendar($event)">
+    <input [class.has-error]="hasError" ngDefaultControl class="form-control range-picker-control" readonly [disabled]="isDisabled">
+    <span class="input-group-addon" [class.has-error]="hasError" [class.disabled]="isDisabled">
+      <span class="glyphicon glyphicon-triangle-bottom"></span>
+    </span>
+  </div>
+  <div *ngIf="show" class="calendar">
+    Calendar
+  </div>
+</div>

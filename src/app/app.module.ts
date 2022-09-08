@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BsngDatepickerModule } from 'bsng-datepicker';
+import { BsngRangepickerModule } from 'bsng-rangepicker';
 
 import { AppComponent } from './app.component';
 
@@ -10,9 +11,9 @@ import { AppComponent } from './app.component';
   ],
   imports: [
     BrowserModule,
-    BsngDatepickerModule
+    BsngDatepickerModule,
+    BsngRangepickerModule
   ],
-  providers: [],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

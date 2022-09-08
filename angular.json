@@ -147,6 +147,37 @@
           }
         }
       }
+    },
+    "bsng-rangepicker": {
+      "projectType": "library",
+      "root": "projects/bsng-rangepicker",
+      "sourceRoot": "projects/bsng-rangepicker/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:ng-packagr",
+          "options": {
+            "project": "projects/bsng-rangepicker/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/bsng-rangepicker/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "projects/bsng-rangepicker/tsconfig.lib.json"
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/bsng-rangepicker/src/test.ts",
+            "tsConfig": "projects/bsng-rangepicker/tsconfig.spec.json",
+            "karmaConfig": "projects/bsng-rangepicker/karma.conf.js"
+          }
+        }
+      }
     }
   },
   "defaultProject": "datepicker"
