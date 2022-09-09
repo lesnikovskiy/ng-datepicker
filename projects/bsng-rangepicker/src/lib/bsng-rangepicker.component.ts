@@ -1,5 +1,5 @@
 import { Component, ElementRef, EventEmitter, HostListener, Input, OnInit, Output } from '@angular/core';
-import { endOfDay, endOfWeek, format, Interval, isValid, parse, startOfDay, startOfWeek } from 'date-fns';
+import { addMonths, endOfDay, endOfWeek, format, Interval, isValid, parse, startOfDay, startOfWeek } from 'date-fns';
 import { RangeOptionModel, SelectedRange } from '../public-api';
 
 @Component({
@@ -28,6 +28,8 @@ export class BsngRangepickerComponent implements OnInit {
     }
   ];
   selectedRangeOption?: RangeOptionModel;
+  selectedLeftMonth!: Date;
+  selectedRightMonth!: Date;
 
   hasError = false;
   show = false;
@@ -52,7 +54,11 @@ export class BsngRangepickerComponent implements OnInit {
         interval: this.selectedInterval != null ? this.selectedInterval : { start: startOfDay(new Date()), end: endOfDay(new Date()) },
         isCustom: true
       }
-    ]
+    ];
+
+    const { start } = this.selectedRangeOption?.interval || {};
+    this.selectedLeftMonth = start != null ? start as Date : new Date();
+    this.selectedRightMonth = addMonths(this.selectedLeftMonth, 1);
   }
 
   get currentRangeDisplay(): string {
@@ -60,7 +66,7 @@ export class BsngRangepickerComponent implements OnInit {
 
     if (start == null && end == null) return 'Select range in calendar';
 
-    const startDate =  start != null && isValid(start) ? format(start, this.format, { weekStartsOn: 1 }) : 'Invalid date';
+    const startDate = start != null && isValid(start) ? format(start, this.format, { weekStartsOn: 1 }) : 'Invalid date';
     const endDate = end != null && isValid(end) ? format(end, this.format, { weekStartsOn: 1 }) : 'Invalid date';
 
     return `${startDate} - ${endDate}`;

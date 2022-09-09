@@ -38,6 +38,8 @@
 
     .range-main {
       flex: 1 1 auto;
+      display: flex;
+      flex-direction: row;
       border: 1px solid #ddd;
       border-top-left-radius: 3px;
       border-top-right-radius: 3px;
@@ -65,10 +67,17 @@
           }
         }
       }
+
+      .calendar-section {
+        display: flex;
+        justify-content: space-between;
+        width: 41rem;
+      }
     }
 
     .range-footer {
       flex: 0 0 auto;
+      display: flex;
       align-items: center;
       justify-content: flex-end;
       padding: 5px;
