@@ -26,7 +26,7 @@
   .calendar {
     position: absolute;
     top: 36px;
-    padding: 5px;
+    padding: 0;
     font-size: 13px;
     background-color: #fff;
     box-shadow: 0 4px 25px 0 rgba(0, 0, 0, 0.1), 0 4px 25px 0 rgba(0, 184, 178, 0.08);
@@ -34,6 +34,52 @@
     z-index: 20;
     user-select: none;
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
+
+    .range-main {
+      flex: 1 1 auto;
+      border: 1px solid #ddd;
+      border-top-left-radius: 3px;
+      border-top-right-radius: 3px;
+      padding: 5px;
+
+      .ranges {
+        width: 140px;
+
+        & > ul {
+          list-style: none;
+          padding: 0;
+
+          & > li {
+            padding: 5px;
+            cursor: pointer;
+
+            &:hover {
+              background: #eee;
+            }
+
+            &.active {
+              background: #08c;
+              color: #fff;
+            }
+          }
+        }
+      }
+    }
+
+    .range-footer {
+      flex: 0 0 auto;
+      align-items: center;
+      justify-content: flex-end;
+      padding: 5px;
+      border: 1px solid #ddd;
+      border-top: none;
+      border-bottom-left-radius: 3px;
+      border-bottom-right-radius: 3px;
+
+      button ~ button {
+        margin-left: 5px;
+      }
+    }
   }
 }

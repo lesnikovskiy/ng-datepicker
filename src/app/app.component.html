@@ -1,7 +1,11 @@
 <div class="date_picker_container">
-  <h1>Rangepicker:</h1>
-  <div class="form-group">
-    <bsng-rangepicker></bsng-rangepicker>
+  <h3>
+    Rangepicker:
+    <span *ngIf="selectedRange" class="date-range">{{ selectedRange.start }} - {{ selectedRange.end }}</span>
+  </h3>
+  <div class="form-group form-group-sm">
+    <bsng-rangepicker format="dd.MM.yyyy HH:mm" [customRangeOptions]="customOptions"
+      (rangeSelected)="rangeSelected($event)"></bsng-rangepicker>
   </div>
   <hr>
   <h1>DateTime: {{ dateTime }}</h1>

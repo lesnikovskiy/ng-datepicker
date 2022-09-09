@@ -1,11 +1,30 @@
 <div class="range-picker-container">
   <div class="input-group" (click)="toggleCalendar($event)">
-    <input [class.has-error]="hasError" ngDefaultControl class="form-control range-picker-control" readonly [disabled]="isDisabled">
+    <input [class.has-error]="hasError" ngDefaultControl class="form-control input-sm range-picker-control" readonly
+      [disabled]="isDisabled">
     <span class="input-group-addon" [class.has-error]="hasError" [class.disabled]="isDisabled">
       <span class="glyphicon glyphicon-triangle-bottom"></span>
     </span>
   </div>
   <div *ngIf="show" class="calendar">
-    Calendar
+    <div class="range-main">
+      <div class="ranges">
+        <ul>
+          <li *ngFor="let option of intervalOptions" (click)="selectRange(option, $event)"
+            [class.active]="option.title === selectedRangeOption?.title">
+            {{ option.title }}
+          </li>
+        </ul>
+      </div>
+      <div class="calendar-section">
+        <div class="calendar-left"></div>
+        <div class="calendar-right"></div>
+      </div>
+    </div>
+    <div *ngIf="selectedRangeOption && selectedRangeOption.isCustom" class="range-footer">
+      {{ currentRangeDisplay }}
+      <button class="btn btn-default btn-sm">Cancel</button>
+      <button class="btn btn-primary btn-sm">Apply</button>
+    </div>
   </div>
 </div>

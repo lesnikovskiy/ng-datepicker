@@ -8,7 +8,7 @@ import { TimelineModel } from '../models/timeline.model';
   styleUrls: ['./bsng-datepicker.component.scss']
 })
 export class BsngDatepickerComponent implements OnInit, OnChanges {
-  @Input() format = 'MM.dd.yyyy';
+  @Input() format = 'dd.MM.yyyy';
   @Input() isReadonly = true;
   @Input() isClearable = false;
   @Input() isDisabled = false;

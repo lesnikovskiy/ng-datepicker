@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 import { TimelineModel } from 'bsng-datepicker';
+import { RangeOptionModel, SelectedRange } from 'bsng-rangepicker';
+import { endOfDay, endOfWeek, startOfDay, startOfWeek, startOfYear, subDays } from 'date-fns';
 
 @Component({
   selector: 'app-root',
@@ -10,6 +12,7 @@ export class AppComponent {
   dateTime = '';
   dateTimeNoLimits = '';
   date = '';
+  selectedRange: SelectedRange | null = null;
 
   timelines: TimelineModel[] = [
     {
@@ -30,6 +33,20 @@ export class AppComponent {
     }
   ];
 
+  customOptions: RangeOptionModel[] = [
+    {
+      title: 'This Business Week',
+      interval: {
+        start: startOfWeek(startOfDay(new Date()), { weekStartsOn: 1 }),
+        end: subDays(endOfWeek(endOfDay(new Date()), { weekStartsOn: 1 }), 2)
+      }
+    },
+    {
+      title: 'Up to Today',
+      interval: { start: startOfYear(new Date(2008, 0, 1, 0, 0)), end: endOfDay(new Date()) }
+    }
+  ];
+
   dateTimeSelected(date: string) {
     date && (this.dateTime = date);
   }
@@ -40,5 +57,9 @@ export class AppComponent {
 
   dateSelected(date: string) {
     date && (this.date = date);
+  }
+
+  rangeSelected(range: SelectedRange) {
+    this.selectedRange = range;
   }
 }
