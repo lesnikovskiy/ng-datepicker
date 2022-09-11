@@ -14,11 +14,11 @@
   </div>
   <div *ngIf="show" class="calendar">
     <div class="dates-only">
-      <bsns-calendar *ngIf="calendarMonthVisible" [currentDate]="currentDate" [selectedMonth]="selectedMonth"
+      <bsng-calendar *ngIf="calendarMonthVisible" [currentDate]="currentDate" [selectedMonth]="selectedMonth"
         [minDate]="minDateDate" [maxDate]="maxDateDate" [daysOfWeekDisabled]="daysOfWeekDisabled"
         [timelines]="timelines" [isDateTime]="isDateTime" (selectMonthFromList)="selectMonthFromList()"
         (dateSelected)="selectDate($event)">
-      </bsns-calendar>
+      </bsng-calendar>
       <bsng-monthpicker *ngIf="monthListVisible" [currentDate]="currentDate" [selectedYear]="selectedYear"
         [minDate]="minDateDate" [maxDate]="maxDateDate" (selectYearFromList)="selectYearFromList($event)"
         (selectedMonthChange)="selectedMonthChange($event)"></bsng-monthpicker>

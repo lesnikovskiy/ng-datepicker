@@ -11,7 +11,7 @@ interface CalendarDay {
 }
 
 @Component({
-  selector: 'bsns-calendar',
+  selector: 'bsng-calendar',
   templateUrl: './calendar.component.html',
   styleUrls: ['./calendar.component.scss']
 })

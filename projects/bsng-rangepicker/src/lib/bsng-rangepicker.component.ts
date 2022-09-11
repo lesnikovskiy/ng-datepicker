@@ -1,6 +1,7 @@
 import { Component, ElementRef, EventEmitter, HostListener, Input, OnInit, Output } from '@angular/core';
-import { addMonths, endOfDay, endOfWeek, format, Interval, isValid, parse, startOfDay, startOfWeek } from 'date-fns';
+import { addMonths, endOfDay, endOfWeek, format, Interval, isBefore, isValid, parse, startOfDay, startOfWeek } from 'date-fns';
 import { RangeOptionModel, SelectedRange } from '../public-api';
+import { SelectedInterval } from './models/selected-interval.model';
 
 @Component({
   selector: 'bsng-rangepicker',
@@ -16,7 +17,7 @@ export class BsngRangepickerComponent implements OnInit {
 
   @Output() rangeSelected = new EventEmitter<SelectedRange>();
 
-  selectedInterval: Interval | null = null;
+  selectedInterval: SelectedInterval = { start: null , end: null };
   intervalOptions: RangeOptionModel[] = [
     {
       title: 'Today',
@@ -28,8 +29,8 @@ export class BsngRangepickerComponent implements OnInit {
     }
   ];
   selectedRangeOption?: RangeOptionModel;
-  selectedLeftMonth!: Date;
-  selectedRightMonth!: Date;
+  selectedStartMonth!: Date;
+  selectedEndMonth!: Date;
 
   hasError = false;
   show = false;
@@ -39,30 +40,30 @@ export class BsngRangepickerComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.selectedInterval = this.selectedRange
-      ? {
+    if (this.selectedRange != null) {
+      this.selectedInterval = {
         start: parse(this.selectedRange[0], this.format, new Date(), { weekStartsOn: 1 }),
         end: parse(this.selectedRange[1], this.format, new Date(), { weekStartsOn: 1 })
-      }
-      : null;
+      };
+    }
 
     this.intervalOptions = [
       ...this.intervalOptions,
       ...this.customRangeOptions.filter(q => q.title !== 'Custom' && !q.isCustom),
       {
         title: 'Custom',
-        interval: this.selectedInterval != null ? this.selectedInterval : { start: startOfDay(new Date()), end: endOfDay(new Date()) },
+        interval: this.getInterval(this.selectedInterval),
         isCustom: true
       }
     ];
 
     const { start } = this.selectedRangeOption?.interval || {};
-    this.selectedLeftMonth = start != null ? start as Date : new Date();
-    this.selectedRightMonth = addMonths(this.selectedLeftMonth, 1);
+    this.selectedStartMonth = start != null ? start as Date : new Date();
+    this.selectedEndMonth = addMonths(this.selectedStartMonth, 1);
   }
 
   get currentRangeDisplay(): string {
-    const { start, end } = this.selectedInterval || {};
+    const { start, end } = this.selectedInterval;
 
     if (start == null && end == null) return 'Select range in calendar';
 
@@ -98,6 +99,29 @@ export class BsngRangepickerComponent implements OnInit {
     }
   }
 
+  dateSelected(date: Date) {
+    const { start, end } = this.selectedInterval;
+
+    if (start != null && end == null) {
+      if (isBefore(date, start)) {
+        this.selectedInterval = {
+          start: date, 
+          end: null
+        };
+      } else {
+        this.selectedInterval = {
+          start,
+          end: date
+        };
+      }
+    } else {
+      this.selectedInterval = {
+        start: date,
+        end: null
+      };
+    }
+  }
+
   setSelectedRange({ start, end }: Interval) {
     if (!isValid(start) || !isValid(end)) {
       this.hasError = true;
@@ -112,5 +136,13 @@ export class BsngRangepickerComponent implements OnInit {
         end: endDate
       });
     }
+  }
+
+  private getInterval({ start, end }: SelectedInterval): Interval {
+    if (start == null && end == null) {
+      return { start: startOfDay(new Date()), end: endOfDay(new Date()) }
+    };
+
+    return { start, end } as Interval;
   }
 }
