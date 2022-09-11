@@ -17,8 +17,10 @@
         </ul>
       </div>
       <div *ngIf="selectedRangeOption && selectedRangeOption.isCustom" class="calendar-section">
-        <bsng-calendar [selectedMonth]="selectedStartMonth" (dateSelected)="dateSelected($event)"></bsng-calendar>
-        <bsng-calendar [selectedMonth]="selectedEndMonth" (dateSelected)="dateSelected($event)"></bsng-calendar>
+        <bsng-calendar [selectedInterval]="selectedInterval" [selectedMonth]="selectedStartMonth"
+          (dateSelected)="dateSelected($event)"></bsng-calendar>
+        <bsng-calendar [selectedInterval]="selectedInterval" [selectedMonth]="selectedEndMonth"
+          (dateSelected)="dateSelected($event)"></bsng-calendar>
       </div>
     </div>
     <div *ngIf="selectedRangeOption && selectedRangeOption.isCustom" class="range-footer">

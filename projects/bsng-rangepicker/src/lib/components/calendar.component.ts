@@ -1,10 +1,13 @@
 import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@angular/core';
-import { addDays, addMonths, eachDayOfInterval, endOfDay, endOfMonth, endOfWeek, format, getDay, isAfter, isBefore, isSameDay, isSameMonth, isToday, startOfDay, startOfMonth, startOfToday, startOfWeek, subMonths } from 'date-fns';
+import { addDays, addMonths, eachDayOfInterval, endOfDay, endOfMonth, endOfWeek, format, getDay, isAfter, isBefore, isSameDay, isSameMonth, isToday, isWithinInterval, startOfDay, startOfMonth, startOfToday, startOfWeek, subMonths } from 'date-fns';
+import { SelectedInterval } from '../models/selected-interval.model';
 
 interface CalendarDay {
   date: Date;
   weekDay: string;
-  selected: boolean;
+  isStartDate: boolean;
+  isEndDate: boolean;
+  isInRange: boolean;
   disabled: boolean;
   today: boolean;
 }
@@ -15,7 +18,7 @@ interface CalendarDay {
   styleUrls: ['./calendar.component.scss']
 })
 export class CalendarComponent implements OnInit {
-  @Input() selectedDate: Date | null = null;
+  @Input() selectedInterval: SelectedInterval | null = null;
   @Input() selectedMonth!: Date;
   @Input() daysOfWeekDisabled: number[] = [];
   @Input() isDateTime = false;
@@ -37,8 +40,8 @@ export class CalendarComponent implements OnInit {
   ngOnChanges(changes: SimpleChanges) {
     let shouldRerenderCalendar = false;
 
-    if (changes.selectedDate?.currentValue) {
-      this.selectedDate = changes.selectedDate.currentValue;
+    if (changes.selectedInterval?.currentValue) {
+      this.selectedInterval = changes.selectedInterval.currentValue;
       shouldRerenderCalendar = true;
     }
 
@@ -83,7 +86,9 @@ export class CalendarComponent implements OnInit {
   getDayClassList(day: CalendarDay): Record<string, boolean> {
     return {
       'today': day.today,
-      'selected': day.selected,
+      'in-range': day.isInRange,
+      'start-date': day.isStartDate,
+      'end-date': day.isEndDate,
       'disabled': day.disabled,
       'diff-month': !this.isSelectedMonth(day)
     };
@@ -159,7 +164,9 @@ export class CalendarComponent implements OnInit {
 
     return dates.map((date) => ({
       today: isToday(date),
-      selected: this.isSelected(date),
+      isStartDate: this.isStartDate(date),
+      isEndDate: this.isEndDate(date),
+      isInRange: this.isInRange(date),
       date,
       weekDay: format(date, 'd', { weekStartsOn: 1 }),
       disabled: this.isDateDisabled(date)
@@ -177,9 +184,26 @@ export class CalendarComponent implements OnInit {
     return weekDays.map(d => format(d, 'EEEEEE', { weekStartsOn: 1 }));
   }
 
-  private isSelected(date: Date): boolean {
-    if (this.currentDate == null) return false;
-    return isSameDay(date, this.currentDate);
+  private isStartDate(date: Date): boolean {
+    const { start } = this.selectedInterval || {};
+    if (start == null) return false;
+
+    return start != null && isSameDay(date, start);
+  }
+
+  private isEndDate(date: Date): boolean {
+    const { end } = this.selectedInterval || {};
+    if (end == null) return false;
+
+    return end != null && isSameDay(date, end);
+  }
+
+  private isInRange(date: Date) {
+    const { start, end } = this.selectedInterval || {};
+
+    if (start == null || end == null) return false;
+
+    return isWithinInterval(date, { start, end });
   }
 
   private isDateDisabled(date: Date) {

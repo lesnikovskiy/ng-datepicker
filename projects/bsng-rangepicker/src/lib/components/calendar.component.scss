@@ -62,16 +62,6 @@
         color: #a1a1a1;
       }
 
-      &.selected {
-        color: #fff;
-        background-color: #47a2f1;
-        &:hover {
-          &:after {
-            opacity: 1;
-          }
-        }
-      }
-
       &.today {
         font-weight: bold;
 
@@ -85,6 +75,31 @@
           bottom: 4px;
           right: 4px;
         }
+      }
+
+      &.in-range {
+        background-color: #ebf4f8;
+        color: #000;
+        border: transparent;
+        &:hover {
+          &:after {
+            opacity: 1;
+          }
+        }
+      }
+
+      &.start-date {
+        background: #357ebd;
+        color: #fff;
+        border-color: transparent;
+        border-radius: 4px 0 0 4px;
+      }
+
+      &.end-date {
+        background: #357ebd;
+        color: #fff;
+        border-color: transparent;
+        border-radius: 0 4px 4px 0;
       }
 
       .week-day {
