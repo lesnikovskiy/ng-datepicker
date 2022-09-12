@@ -2,7 +2,6 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 
 import { TimepickerComponent } from './timepicker.component';
-import { DisplayTimePipe } from '../../pipes/display-time.pipe';
 import { parse } from 'date-fns';
 
 describe('TimepickerComponent', () => {
@@ -11,7 +10,7 @@ describe('TimepickerComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [TimepickerComponent, DisplayTimePipe]
+      declarations: [TimepickerComponent]
     });
 
     fixture = TestBed.createComponent(TimepickerComponent);
