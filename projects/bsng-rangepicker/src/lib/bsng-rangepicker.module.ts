@@ -2,12 +2,14 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BsngRangepickerComponent } from './bsng-rangepicker.component';
-import { CalendarComponent } from './components/calendar.component';
+import { CalendarComponent } from './components/calendar/calendar.component';
+import { NavigationComponent } from './components/navigation/navigation.component';
 
 @NgModule({
   declarations: [
     BsngRangepickerComponent,
-    CalendarComponent
+    CalendarComponent,
+    NavigationComponent
   ],
   imports: [
     CommonModule,

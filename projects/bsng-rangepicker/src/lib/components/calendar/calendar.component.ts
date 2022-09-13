@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@angular/core';
 import { addDays, addMonths, eachDayOfInterval, endOfDay, endOfMonth, endOfWeek, format, getDay, isAfter, isBefore, isSameDay, isSameMonth, isToday, isWithinInterval, startOfDay, startOfMonth, startOfToday, startOfWeek, subMonths } from 'date-fns';
-import { SelectedInterval } from '../models/selected-interval.model';
+import { SelectedInterval } from '../../models/selected-interval.model';
 
 interface CalendarDay {
   date: Date;
@@ -10,6 +10,7 @@ interface CalendarDay {
   isInRange: boolean;
   disabled: boolean;
   today: boolean;
+  isSameMonth: boolean;
 }
 
 @Component({
@@ -18,7 +19,7 @@ interface CalendarDay {
   styleUrls: ['./calendar.component.scss']
 })
 export class CalendarComponent implements OnInit {
-  @Input() selectedInterval: SelectedInterval | null = null;
+  @Input() selectedInterval!: SelectedInterval;
   @Input() selectedMonth!: Date;
   @Input() daysOfWeekDisabled: number[] = [];
   @Input() isDateTime = false;
@@ -90,7 +91,7 @@ export class CalendarComponent implements OnInit {
       'start-date': day.isStartDate,
       'end-date': day.isEndDate,
       'disabled': day.disabled,
-      'diff-month': !this.isSelectedMonth(day)
+      'diff-month': !day.isSameMonth
     };
   }
 
@@ -162,15 +163,20 @@ export class CalendarComponent implements OnInit {
       dates = dates.concat(additionalDates);
     }
 
-    return dates.map((date) => ({
-      today: isToday(date),
-      isStartDate: this.isStartDate(date),
-      isEndDate: this.isEndDate(date),
-      isInRange: this.isInRange(date),
-      date,
-      weekDay: format(date, 'd', { weekStartsOn: 1 }),
-      disabled: this.isDateDisabled(date)
-    }));
+    return dates.map((date) => {
+      const isSame = isSameMonth(this.selectedMonth, date);
+
+      return {
+        today: isToday(date),
+        isStartDate: this.isStartDate(date) && isSame,
+        isEndDate: this.isEndDate(date) && isSame,
+        isInRange: this.isInRange(date) && isSame,
+        date,
+        weekDay: format(date, 'd', { weekStartsOn: 1 }),
+        disabled: this.isDateDisabled(date),
+        isSameMonth: isSame
+      };
+    });
   }
 
   private getWeekDayNames() {

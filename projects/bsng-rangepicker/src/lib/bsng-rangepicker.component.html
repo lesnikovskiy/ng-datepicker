@@ -1,7 +1,7 @@
 <div class="range-picker-container">
   <div class="input-group" (click)="toggleCalendar($event)">
     <input [class.has-error]="hasError" ngDefaultControl class="form-control input-sm range-picker-control" readonly
-      [disabled]="isDisabled">
+      [disabled]="isDisabled" [value]="selectedIntervalView">
     <span class="input-group-addon" [class.has-error]="hasError" [class.disabled]="isDisabled">
       <span class="glyphicon glyphicon-triangle-bottom"></span>
     </span>
@@ -24,7 +24,7 @@
       </div>
     </div>
     <div *ngIf="selectedRangeOption && selectedRangeOption.isCustom" class="range-footer">
-      {{ currentRangeDisplay }}
+      <span>{{ currentRangeDisplay }}</span>
       <button class="btn btn-default btn-sm">Cancel</button>
       <button class="btn btn-primary btn-sm">Apply</button>
     </div>

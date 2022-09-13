@@ -62,10 +62,19 @@ export class BsngRangepickerComponent implements OnInit {
     this.selectedEndMonth = addMonths(this.selectedStartMonth, 1);
   }
 
+  get selectedIntervalView(): string {
+    const { start, end } = this.selectedInterval;
+
+    const startDate = start != null && isValid(start) ? format(start, this.format, { weekStartsOn: 1 }) : null;
+    const endDate = end != null && isValid(end) ? format(end, this.format, { weekStartsOn: 1 }) : null;
+
+    return startDate != null && endDate != null ? `${startDate} - ${endDate}` : 'Select Date Range';
+  }
+
   get currentRangeDisplay(): string {
     const { start, end } = this.selectedInterval;
 
-    if (start == null && end == null) return 'Select range in calendar';
+    if (start == null && end == null) return 'Range not selected';
 
     const startDate = start != null && isValid(start) ? format(start, this.format, { weekStartsOn: 1 }) : 'Invalid date';
     const endDate = end != null && isValid(end) ? format(end, this.format, { weekStartsOn: 1 }) : 'Invalid date';
@@ -92,9 +101,9 @@ export class BsngRangepickerComponent implements OnInit {
     event.stopPropagation();
 
     this.selectedRangeOption = option;
+    this.setSelectedRange(this.selectedRangeOption.interval);
 
     if (!this.selectedRangeOption.isCustom) {
-      this.setSelectedRange(this.selectedRangeOption.interval);
       this.show = false;
     }
   }
@@ -130,6 +139,10 @@ export class BsngRangepickerComponent implements OnInit {
 
       const startDate = format(start, this.format, { weekStartsOn: 1 });
       const endDate = format(end, this.format, { weekStartsOn: 1 });
+
+      if (start instanceof Date && end instanceof Date) {
+        this.selectedInterval = { start, end };
+      }
 
       this.rangeSelected.emit({
         start: startDate,

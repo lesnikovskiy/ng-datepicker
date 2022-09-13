@@ -142,7 +142,7 @@ export class BsngDatepickerComponent implements OnInit, OnChanges {
   }
 
   setCurrentDate(date: Date | null) {
-    const isDateValid = isValid(date);
+    const isDateValid = date == null || isValid(date);
     this.hasError = !isDateValid;
 
     if (!isDateValid) return;
