@@ -43,17 +43,19 @@
       border: 1px solid #ddd;
       border-top-left-radius: 3px;
       border-top-right-radius: 3px;
-      padding: 5px;
+      margin: 0;
+      padding: 0;
 
       .ranges {
-        width: 140px;
+        min-width: 140px;
 
         & > ul {
           list-style: none;
           padding: 0;
 
           & > li {
-            padding: 5px;
+            margin: 0;
+            padding: 5px 10px;
             cursor: pointer;
 
             &:hover {
@@ -71,7 +73,7 @@
       .calendar-section {
         display: flex;
         justify-content: space-between;
-        width: 41rem;
+        border-left: 1px solid #ddd;
       }
     }
 

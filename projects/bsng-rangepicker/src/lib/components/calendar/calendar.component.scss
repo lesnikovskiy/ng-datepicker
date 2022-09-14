@@ -1,3 +1,8 @@
+:host {
+  width: 28rem;
+  padding: 0 10px;
+}
+
 .calendar-month {
   .day-names {
     display: flex;
@@ -100,6 +105,10 @@
         color: #fff;
         border-color: transparent;
         border-radius: 0 4px 4px 0;
+      }
+
+      &.start-date.end-date {
+        border-radius: 4px;
       }
 
       .week-day {

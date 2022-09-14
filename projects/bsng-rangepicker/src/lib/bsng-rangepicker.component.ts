@@ -12,10 +12,16 @@ export class BsngRangepickerComponent implements OnInit {
   @Input() isDisabled = false;
   @Input() format = 'dd.MM.yyyy';
   @Input() selectedRange: [string, string] | null | undefined = null;
-  @Input() isDateTime = false;
   @Input() customRangeOptions: RangeOptionModel[] = [];
+  @Input() daysOfWeekDisabled: number[] = [];
+  @Input() isDateTime = false;
+  @Input() minDate: string | null | undefined = null;
+  @Input() maxDate: string | null | undefined = null;
 
   @Output() rangeSelected = new EventEmitter<SelectedRange>();
+
+  minDateDate: Date | null = null;
+  maxDateDate: Date | null = null;
 
   selectedInterval: SelectedInterval = { start: null , end: null };
   intervalOptions: RangeOptionModel[] = [
@@ -60,6 +66,9 @@ export class BsngRangepickerComponent implements OnInit {
     const { start } = this.selectedRangeOption?.interval || {};
     this.selectedStartMonth = start != null ? start as Date : new Date();
     this.selectedEndMonth = addMonths(this.selectedStartMonth, 1);
+
+    this.minDateDate = this.minDate ? parse(this.minDate, this.format, new Date(), { weekStartsOn: 1 }) : null;
+    this.maxDateDate = this.maxDate ? parse(this.maxDate, this.format, new Date(), { weekStartsOn: 1 }) : null;
   }
 
   get selectedIntervalView(): string {
@@ -114,18 +123,18 @@ export class BsngRangepickerComponent implements OnInit {
     if (start != null && end == null) {
       if (isBefore(date, start)) {
         this.selectedInterval = {
-          start: date, 
+          start: startOfDay(date), 
           end: null
         };
       } else {
         this.selectedInterval = {
           start,
-          end: date
+          end: endOfDay(date)
         };
       }
     } else {
       this.selectedInterval = {
-        start: date,
+        start: startOfDay(date),
         end: null
       };
     }

@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 
 @Component({
   selector: 'bsng-navigation[selectedMonth]',
@@ -11,21 +11,15 @@ export class NavigationComponent implements OnInit {
   @Input() maxDate: Date | null = null;
   @Input() isPrevVisible = true;
   @Input() isNextVisible = true;
+  @Input() isPrevDisabled = false;
+  @Input() isNextDisabled = false;
 
-  isPrevDisabled = false;
-  isNextDisabled = false;
+  @Output() prevMonth = new EventEmitter<Event>();
+  @Output() nextMonth = new EventEmitter<Event>();
+
+  
 
   ngOnInit() {
 
-  }
-
-  prev(event: Event) {
-    event.preventDefault();
-    event.stopPropagation();
-  }
-
-  next(event: Event) {
-    event.preventDefault();
-    event.stopPropagation();
   }
 }

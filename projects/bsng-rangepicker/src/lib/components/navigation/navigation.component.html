@@ -1,11 +1,11 @@
 <div class="navs">
   <div class="month-nav">
     <button [class.hidden]="!isPrevVisible" [disabled]="isPrevDisabled" class="glyphicon glyphicon-chevron-left nav-btn"
-      (click)="prev($event)"></button>
+      (click)="prevMonth.emit($event)"></button>
     <div class="main-content">
       Main to be here
     </div>
     <button [class.hidden]="!isNextVisible" [disabled]="isNextDisabled" class="glyphicon glyphicon-chevron-right nav-btn"
-      (click)="next($event)"></button>
+      (click)="nextMonth.emit($event)"></button>
   </div>
 </div>
