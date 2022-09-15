@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { addYears, eachMonthOfInterval, eachYearOfInterval, endOfMonth, endOfYear, format, getMonth, getYear, isAfter, isBefore, isSameMonth, isSameYear, startOfMonth, startOfYear, subYears } from 'date-fns';
 
 interface DateOption {
@@ -13,7 +13,7 @@ interface DateOption {
   templateUrl: './navigation.component.html',
   styleUrls: ['./navigation.component.scss']
 })
-export class NavigationComponent implements OnInit {
+export class NavigationComponent implements OnInit, OnChanges {
   @Input() selectedMonth!: Date;
   @Input() minDate: Date | null = null;
   @Input() maxDate: Date | null = null;
@@ -28,9 +28,53 @@ export class NavigationComponent implements OnInit {
   monthList: DateOption[] = [];
   yearList: DateOption[] = [];
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.monthList = this.getMonthList();
     this.yearList = this.getYearList();
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    let updateUi = false;
+
+    if (changes.selectedMonth?.currentValue) {
+      this.selectedMonth = changes.selectedMonth.currentValue;
+      updateUi = true;
+    }
+
+    if (changes.minDate?.currentValue) {
+      this.minDate = changes.minDate.currentValue;
+      updateUi = true;
+    }
+
+    if (changes.maxDate?.currentValue) {
+      this.maxDate = changes.maxDate.currentValue;
+      updateUi = true;
+    }
+
+    if (changes.isPrevVisible?.currentValue) {
+      this.isPrevVisible = changes.isPrevVisible.currentValue;
+      updateUi = true;
+    }
+
+    if (changes.isNextVisible?.currentValue) {
+      this.isNextVisible = changes.isNextVisible.currentValue;
+      updateUi = true;
+    }
+
+    if (changes.isPrevDisabled?.currentValue) {
+      this.isPrevDisabled = changes.isPrevDisabled.currentValue;
+      updateUi = true;
+    }
+
+    if (changes.isNextDisabled?.currentValue) {
+      this.isNextDisabled = changes.isNextDisabled.currentValue;
+      updateUi = true;
+    }
+
+    if (updateUi) {
+      this.monthList = this.getMonthList();
+      this.yearList = this.getYearList();
+    }
   }
 
   getMonthList(): DateOption[] {
@@ -65,7 +109,7 @@ export class NavigationComponent implements OnInit {
   }
 
   private isSelectedMonth(date: Date): boolean {
-     return isSameMonth(date, this.selectedMonth);
+    return isSameMonth(date, this.selectedMonth);
   }
 
   private isSelectedYear(date: Date): boolean {

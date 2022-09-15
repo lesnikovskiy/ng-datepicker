@@ -19,10 +19,12 @@
       <div *ngIf="selectedRangeOption && selectedRangeOption.isCustom" class="calendar-section">
         <bsng-calendar [selectedInterval]="selectedInterval" [selectedMonth]="selectedStartMonth" [index]="0"
           [daysOfWeekDisabled]="daysOfWeekDisabled" [isDateTime]="isDateTime" [minDate]="minDateDate"
-          [maxDate]="maxDateDate" (dateSelected)="dateSelected($event)"></bsng-calendar>
+          [maxDate]="maxDateDate" (dateSelected)="dateSelected($event)" (prevMonth)="prevMonth($event)"
+          (nextMonth)="nextMonth($event)"></bsng-calendar>
         <bsng-calendar [selectedInterval]="selectedInterval" [selectedMonth]="selectedEndMonth" [index]="1"
           [daysOfWeekDisabled]="daysOfWeekDisabled" [isDateTime]="isDateTime" [minDate]="minDateDate"
-          [maxDate]="maxDateDate" (dateSelected)="dateSelected($event)"></bsng-calendar>
+          [maxDate]="maxDateDate" (dateSelected)="dateSelected($event)" (prevMonth)="prevMonth($event)"
+          (nextMonth)="nextMonth($event)"></bsng-calendar>
       </div>
     </div>
     <div *ngIf="selectedRangeOption && selectedRangeOption.isCustom" class="range-footer">

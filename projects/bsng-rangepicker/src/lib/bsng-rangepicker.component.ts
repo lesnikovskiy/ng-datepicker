@@ -1,5 +1,5 @@
 import { Component, ElementRef, EventEmitter, HostListener, Input, OnInit, Output } from '@angular/core';
-import { addMonths, endOfDay, endOfWeek, format, Interval, isBefore, isValid, parse, startOfDay, startOfWeek } from 'date-fns';
+import { addMonths, endOfDay, endOfWeek, format, Interval, isBefore, isValid, parse, startOfDay, startOfWeek, subMonths } from 'date-fns';
 import { RangeOptionModel, SelectedRange } from '../public-api';
 import { SelectedInterval } from './models/selected-interval.model';
 
@@ -158,6 +158,22 @@ export class BsngRangepickerComponent implements OnInit {
         end: endDate
       });
     }
+  }
+
+  prevMonth(event: Event): void {
+    event.preventDefault();
+    event.stopPropagation();
+
+    this.selectedStartMonth = subMonths(this.selectedStartMonth, 1);
+    this.selectedEndMonth = subMonths(this.selectedEndMonth, 1);
+  }
+
+  nextMonth(event: Event): void {
+    event.preventDefault();
+    event.stopPropagation();
+
+    this.selectedStartMonth = addMonths(this.selectedStartMonth, 1);
+    this.selectedEndMonth = addMonths(this.selectedEndMonth, 1);
   }
 
   private getInterval({ start, end }: SelectedInterval): Interval {

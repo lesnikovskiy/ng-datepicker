@@ -28,6 +28,8 @@ export class CalendarComponent implements OnInit {
   @Input() maxDate: Date | null = null;
 
   @Output() dateSelected = new EventEmitter<Date>();
+  @Output() prevMonth = new EventEmitter<Event>();
+  @Output() nextMonth = new EventEmitter<Event>();
 
   namesOfDays: string[] = [];
   weeks: CalendarDay[][] = [];
@@ -49,6 +51,11 @@ export class CalendarComponent implements OnInit {
 
     if (changes.selectedMonth?.currentValue) {
       this.selectedMonth = changes.selectedMonth.currentValue;
+      shouldRerenderCalendar = true;
+    }
+
+    if (changes.index?.currentValue) {
+      this.index = changes.index.currentValue;
       shouldRerenderCalendar = true;
     }
 
@@ -119,16 +126,6 @@ export class CalendarComponent implements OnInit {
     } else {
       this.dateSelected.emit(date);
     }
-  }
-
-  prevMonth(): void {
-    this.selectedMonth = subMonths(this.selectedMonth, 1);
-    this.renderCalendar();
-  }
-
-  nextMonth(): void {
-    this.selectedMonth = addMonths(this.selectedMonth, 1);
-    this.renderCalendar();
   }
 
   private renderCalendar(): void {
