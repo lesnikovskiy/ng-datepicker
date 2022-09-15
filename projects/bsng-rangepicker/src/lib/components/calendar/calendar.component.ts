@@ -21,6 +21,7 @@ interface CalendarDay {
 export class CalendarComponent implements OnInit {
   @Input() selectedInterval!: SelectedInterval;
   @Input() selectedMonth!: Date;
+  @Input() index!: number;
   @Input() daysOfWeekDisabled: number[] = [];
   @Input() isDateTime = false;
   @Input() minDate: Date | null = null;

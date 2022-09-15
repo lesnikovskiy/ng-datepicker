@@ -4,8 +4,9 @@
     <span *ngIf="selectedRange" class="date-range">{{ selectedRange.start }} - {{ selectedRange.end }}</span>
   </h3>
   <div class="form-group form-group-sm">
-    <bsng-rangepicker format="dd.MM.yyyy HH:mm" [customRangeOptions]="customOptions"
-      (rangeSelected)="rangeSelected($event)"></bsng-rangepicker>
+    <bsng-rangepicker format="dd.MM.yyyy HH:mm" [customRangeOptions]="customOptions" minDate="24.06.2022 09:00"
+      maxDate="24.11.2022 18:00" [isDateTime]="true" [daysOfWeekDisabled]="[0]" (rangeSelected)="rangeSelected($event)">
+    </bsng-rangepicker>
   </div>
   <hr>
   <h1>DateTime: {{ dateTime }}</h1>

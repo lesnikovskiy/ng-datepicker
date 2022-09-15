@@ -8,7 +8,8 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0 8px;
+    margin: 0;
+    padding: 0;
 
     .nav-btn {
       flex-grow: 0;
@@ -38,6 +39,17 @@
 
     .main-content {
       flex-grow: 1;
+      display: flex;
+      align-items: center;
+
+      .monthselect {
+        width: 56%;
+        margin: 0 2%;
+      }
+
+      &.right-aligned {
+        justify-content: flex-end;
+      }
     }
   }
 }

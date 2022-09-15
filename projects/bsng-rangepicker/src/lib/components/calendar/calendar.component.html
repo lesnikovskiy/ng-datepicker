@@ -1,13 +1,13 @@
-<bsng-navigation [selectedMonth]="selectedMonth"></bsng-navigation>
+<bsng-navigation [selectedMonth]="selectedMonth" [isPrevDisabled]="isPrevDisabled" [isNextDisabled]="isNextDisabled"
+  [isPrevVisible]="index === 0" [isNextVisible]="index === 1" [minDate]="minDate" [maxDate]="maxDate">
+</bsng-navigation>
 <div class="calendar-month">
   <div class="day-names">
     <div class="day-name" *ngFor="let name of namesOfDays">{{name}}</div>
   </div>
   <div class="weeks">
     <div class="week" *ngFor="let week of weeks">
-      <div *ngFor="let day of week" class="date"
-        [ngClass]="getDayClassList(day)"
-        (click)="selectDate(day, $event)">
+      <div *ngFor="let day of week" class="date" [ngClass]="getDayClassList(day)" (click)="selectDate(day, $event)">
         <span class="week-day">{{ day.weekDay }}</span>
       </div>
     </div>
