@@ -1,5 +1,5 @@
 <bsng-navigation [selectedMonth]="selectedMonth" [isPrevDisabled]="isPrevDisabled" [isNextDisabled]="isNextDisabled"
-  [isPrevVisible]="index === 0" [isNextVisible]="index === 1" [minDate]="minDate" [maxDate]="maxDate"
+  [isPrevVisible]="isPrevVisible" [isNextVisible]="isNextVisible" [minDate]="minDate" [maxDate]="maxDate"
   (prevMonth)="prevMonth.emit($event)" (nextMonth)="nextMonth.emit($event)">
 </bsng-navigation>
 <div class="calendar-month">

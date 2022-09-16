@@ -1,5 +1,5 @@
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
-import { addYears, eachMonthOfInterval, eachYearOfInterval, endOfMonth, endOfYear, format, getMonth, getYear, isAfter, isBefore, isSameMonth, isSameYear, startOfMonth, startOfYear, subYears } from 'date-fns';
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
+import { addYears, compareDesc, eachMonthOfInterval, eachYearOfInterval, endOfMonth, endOfYear, format, getMonth, getYear, isAfter, isBefore, isSameMonth, isSameYear, startOfMonth, startOfYear, subYears } from 'date-fns';
 
 interface DateOption {
   date: number;
@@ -13,7 +13,7 @@ interface DateOption {
   templateUrl: './navigation.component.html',
   styleUrls: ['./navigation.component.scss']
 })
-export class NavigationComponent implements OnInit, OnChanges {
+export class NavigationComponent implements OnChanges {
   @Input() selectedMonth!: Date;
   @Input() minDate: Date | null = null;
   @Input() maxDate: Date | null = null;
@@ -27,11 +27,6 @@ export class NavigationComponent implements OnInit, OnChanges {
 
   monthList: DateOption[] = [];
   yearList: DateOption[] = [];
-
-  ngOnInit(): void {
-    this.monthList = this.getMonthList();
-    this.yearList = this.getYearList();
-  }
 
   ngOnChanges(changes: SimpleChanges): void {
     let updateUi = false;
@@ -90,22 +85,31 @@ export class NavigationComponent implements OnInit, OnChanges {
   }
 
   getYearList(): DateOption[] {
-    const interval = this.isNextDisabled
-      ? eachYearOfInterval({
-        start: startOfYear(this.selectedMonth),
-        end: subYears(this.selectedMonth, 100)
-      })
-      : eachYearOfInterval({
-        start: startOfYear(this.selectedMonth),
-        end: addYears(this.selectedMonth, 100)
-      });
+    debugger
+    const interval = this.isNextVisible
+      ? this.getNextYearInterval()
+      : this.getPrevYearInterval();
 
-    return interval.map(date => ({
+    return interval.map((date: Date) => ({
       date: getYear(date),
       display: format(date, 'yyyy', { weekStartsOn: 1 }),
       isSelected: this.isSelectedYear(date),
       isDisabled: this.isYearDisabled(date)
     }));
+  }
+
+  private getNextYearInterval(): Date[] {
+    return eachYearOfInterval({
+      start: startOfYear(this.selectedMonth),
+      end: startOfYear(addYears(this.selectedMonth, 100))
+    });
+  }
+
+  private getPrevYearInterval(): Date[] {
+    return eachYearOfInterval({
+      start: startOfYear(subYears(this.selectedMonth, 100)),
+      end: startOfYear(this.selectedMonth)
+    }).sort(compareDesc);
   }
 
   private isSelectedMonth(date: Date): boolean {

@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@angular/core';
-import { addDays, addMonths, eachDayOfInterval, endOfDay, endOfMonth, endOfWeek, format, getDay, isAfter, isBefore, isSameDay, isSameMonth, isToday, isWithinInterval, startOfDay, startOfMonth, startOfToday, startOfWeek, subMonths } from 'date-fns';
+import { addDays, addMonths, eachDayOfInterval, endOfDay, endOfMonth, endOfWeek, format, getDay, isAfter, isBefore, isSameDay, isSameMonth, isToday, isWithinInterval, startOfDay, startOfMonth, startOfWeek, subMonths } from 'date-fns';
 import { SelectedInterval } from '../../models/selected-interval.model';
 
 interface CalendarDay {
@@ -35,8 +35,13 @@ export class CalendarComponent implements OnInit {
   weeks: CalendarDay[][] = [];
 
   currentDate!: Date;
+  isPrevVisible = true;
+  isNextVisible = true;
 
   ngOnInit() {
+    this.isPrevVisible = this.index === 0;
+    this.isNextVisible = this.index === 1;
+
     this.namesOfDays = this.getWeekDayNames();
     this.renderCalendar();
   }
@@ -75,21 +80,19 @@ export class CalendarComponent implements OnInit {
   }
 
   get isPrevDisabled(): boolean {
-    if (this.minDate == null) return false;
+    if (!this.isPrevVisible || this.minDate == null) return false;
 
-    const prevMonth = subMonths(this.selectedMonth, 1);
+    const prevMonth = subMonths(new Date(this.selectedMonth), 1);
     return isBefore(prevMonth, startOfMonth(this.minDate));
   }
 
   get isNextDisabled(): boolean {
-    if (this.maxDate == null) return false;
+    if (!this.isNextVisible || this.maxDate == null) {
+      return false;
+    };
 
     const next = addMonths(this.selectedMonth, 1);
     return isAfter(next, endOfMonth(this.maxDate));
-  }
-
-  get selectedMonthButtonText(): string {
-    return `${format(this.selectedMonth, 'MMMM', { weekStartsOn: 1 })} ${format(this.selectedMonth, 'yyyy', { weekStartsOn: 1 })}`;
   }
 
   getDayClassList(day: CalendarDay): Record<string, boolean> {
@@ -101,14 +104,6 @@ export class CalendarComponent implements OnInit {
       'disabled': day.disabled,
       'diff-month': !day.isSameMonth
     };
-  }
-
-  isDisabledMonth(currentDate: Date): boolean {
-    return isSameMonth(currentDate, startOfToday());
-  }
-
-  isSelectedMonth(date: CalendarDay): boolean {
-    return isSameMonth(this.selectedMonth, date.date);
   }
 
   selectDate({ date }: CalendarDay, event: Event) {
