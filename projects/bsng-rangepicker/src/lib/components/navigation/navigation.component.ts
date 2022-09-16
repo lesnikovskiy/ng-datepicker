@@ -24,6 +24,8 @@ export class NavigationComponent implements OnChanges {
 
   @Output() prevMonth = new EventEmitter<Event>();
   @Output() nextMonth = new EventEmitter<Event>();
+  @Output() monthSelect = new EventEmitter<number>();
+  @Output() yearSelect = new EventEmitter<number>();
 
   monthList: DateOption[] = [];
   yearList: DateOption[] = [];
@@ -72,7 +74,25 @@ export class NavigationComponent implements OnChanges {
     }
   }
 
-  getMonthList(): DateOption[] {
+  selectMonth(event: Event) {
+    event.preventDefault();
+    event.stopPropagation();
+
+    const target = event.target as HTMLSelectElement;
+    const month = Number.parseInt(target.value, 10);
+    !isNaN(month) && this.monthSelect.emit(month)
+  }
+
+  selectYear(event: Event) {
+    event.preventDefault();
+    event.stopPropagation();
+
+    const target = event.target as HTMLSelectElement;
+    const year = Number.parseInt(target.value, 10);
+    !isNaN(year) && this.yearSelect.emit(year);
+  }
+
+  private getMonthList(): DateOption[] {
     return eachMonthOfInterval({
       start: startOfYear(this.selectedMonth),
       end: endOfYear(this.selectedMonth)
@@ -84,7 +104,7 @@ export class NavigationComponent implements OnChanges {
     }));
   }
 
-  getYearList(): DateOption[] {
+  private getYearList(): DateOption[] {
     const interval = this.isNextVisible
       ? this.getNextYearInterval()
       : this.getPrevYearInterval();
@@ -99,7 +119,7 @@ export class NavigationComponent implements OnChanges {
 
   private getNextYearInterval(): Date[] {
     return eachYearOfInterval({
-      start: startOfYear(this.selectedMonth),
+      start: startOfYear(new Date()),
       end: startOfYear(addYears(this.selectedMonth, 100))
     });
   }
@@ -107,7 +127,7 @@ export class NavigationComponent implements OnChanges {
   private getPrevYearInterval(): Date[] {
     return eachYearOfInterval({
       start: startOfYear(subYears(this.selectedMonth, 100)),
-      end: startOfYear(this.selectedMonth)
+      end: startOfYear(new Date())
     }).sort(compareDesc);
   }
 

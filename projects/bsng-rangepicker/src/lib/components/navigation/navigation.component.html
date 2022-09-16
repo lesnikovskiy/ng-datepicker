@@ -3,10 +3,10 @@
     <button [class.hidden]="!isPrevVisible" [disabled]="isPrevDisabled" class="glyphicon glyphicon-chevron-left nav-btn"
       (click)="prevMonth.emit($event)"></button>
     <div class="main-content" [class.right-aligned]="isNextVisible">
-      <select class="monthselect">
+      <select class="monthselect" (change)="selectMonth($event)">
         <option *ngFor="let m of monthList" [value]="m.date" [disabled]="m.isDisabled" [selected]="m.isSelected">{{ m.display }}</option>
       </select>
-      <select>
+      <select (change)="selectYear($event)">
         <option *ngFor="let y of yearList" [value]="y.date" [disabled]="y.isDisabled" [selected]="y.isSelected">{{ y.display }}</option>
       </select>
     </div>

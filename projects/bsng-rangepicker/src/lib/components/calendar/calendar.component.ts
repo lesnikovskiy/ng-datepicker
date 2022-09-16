@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@angular/core';
-import { addDays, addMonths, eachDayOfInterval, endOfDay, endOfMonth, endOfWeek, format, getDay, isAfter, isBefore, isSameDay, isSameMonth, isToday, isWithinInterval, startOfDay, startOfMonth, startOfWeek, subMonths } from 'date-fns';
+import { addDays, addMonths, eachDayOfInterval, endOfDay, endOfMonth, endOfWeek, format, getDay, isAfter, isBefore, isSameDay, isSameMonth, isToday, isWithinInterval, setMonth, setYear, startOfDay, startOfMonth, startOfWeek, subMonths } from 'date-fns';
 import { SelectedDate } from '../../models/selected-date.model';
 import { SelectedInterval } from '../../models/selected-interval.model';
 
@@ -35,7 +35,6 @@ export class CalendarComponent implements OnInit {
   namesOfDays: string[] = [];
   weeks: CalendarDay[][] = [];
 
-  currentDate!: Date;
   isPrevVisible = true;
   isNextVisible = true;
 
@@ -117,8 +116,8 @@ export class CalendarComponent implements OnInit {
           date.getFullYear(),
           date.getMonth(),
           date.getDate(),
-          this.currentDate?.getHours() ?? 0,
-          this.currentDate?.getMinutes() ?? 0
+          date.getHours() ?? 0,
+          date.getMinutes() ?? 0
         ),
         monthPosition: this.monthPosition
       });
@@ -128,6 +127,16 @@ export class CalendarComponent implements OnInit {
         monthPosition: this.monthPosition
       });
     }
+  }
+
+  monthSelect(month: number) {
+    this.selectedMonth = setMonth(this.selectedMonth, month);
+    this.renderCalendar();
+  }
+
+  yearSelect(year: number) {
+    this.selectedMonth = setYear(this.selectedMonth, year);
+    this.renderCalendar();
   }
 
   private renderCalendar(): void {
