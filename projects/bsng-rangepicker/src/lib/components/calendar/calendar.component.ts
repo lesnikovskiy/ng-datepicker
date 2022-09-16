@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@angular/core';
 import { addDays, addMonths, eachDayOfInterval, endOfDay, endOfMonth, endOfWeek, format, getDay, isAfter, isBefore, isSameDay, isSameMonth, isToday, isWithinInterval, startOfDay, startOfMonth, startOfWeek, subMonths } from 'date-fns';
+import { SelectedDate } from '../../models/selected-date.model';
 import { SelectedInterval } from '../../models/selected-interval.model';
 
 interface CalendarDay {
@@ -21,13 +22,13 @@ interface CalendarDay {
 export class CalendarComponent implements OnInit {
   @Input() selectedInterval!: SelectedInterval;
   @Input() selectedMonth!: Date;
-  @Input() index!: number;
+  @Input() monthPosition!: 'start' | 'end';
   @Input() daysOfWeekDisabled: number[] = [];
   @Input() isDateTime = false;
   @Input() minDate: Date | null = null;
   @Input() maxDate: Date | null = null;
 
-  @Output() dateSelected = new EventEmitter<Date>();
+  @Output() dateSelected = new EventEmitter<SelectedDate>();
   @Output() prevMonth = new EventEmitter<Event>();
   @Output() nextMonth = new EventEmitter<Event>();
 
@@ -39,8 +40,8 @@ export class CalendarComponent implements OnInit {
   isNextVisible = true;
 
   ngOnInit() {
-    this.isPrevVisible = this.index === 0;
-    this.isNextVisible = this.index === 1;
+    this.isPrevVisible = this.monthPosition === 'start';
+    this.isNextVisible = this.monthPosition === 'end';
 
     this.namesOfDays = this.getWeekDayNames();
     this.renderCalendar();
@@ -59,8 +60,8 @@ export class CalendarComponent implements OnInit {
       shouldRerenderCalendar = true;
     }
 
-    if (changes.index?.currentValue) {
-      this.index = changes.index.currentValue;
+    if (changes.monthPosition?.currentValue) {
+      this.monthPosition = changes.monthPosition.currentValue;
       shouldRerenderCalendar = true;
     }
 
@@ -111,15 +112,21 @@ export class CalendarComponent implements OnInit {
     event.stopPropagation();
 
     if (this.isDateTime) {
-      this.dateSelected.emit(new Date(
-        date.getFullYear(),
-        date.getMonth(),
-        date.getDate(),
-        this.currentDate?.getHours() ?? 0,
-        this.currentDate?.getMinutes() ?? 0
-      ));
+      this.dateSelected.emit({
+        date: new Date(
+          date.getFullYear(),
+          date.getMonth(),
+          date.getDate(),
+          this.currentDate?.getHours() ?? 0,
+          this.currentDate?.getMinutes() ?? 0
+        ),
+        monthPosition: this.monthPosition
+      });
     } else {
-      this.dateSelected.emit(date);
+      this.dateSelected.emit({
+        date,
+        monthPosition: this.monthPosition
+      });
     }
   }
 

@@ -1,6 +1,7 @@
 import { Component, ElementRef, EventEmitter, HostListener, Input, OnInit, Output } from '@angular/core';
 import { addMonths, endOfDay, endOfWeek, format, Interval, isBefore, isValid, parse, startOfDay, startOfWeek, subMonths } from 'date-fns';
 import { RangeOptionModel, SelectedRange } from '../public-api';
+import { SelectedDate } from './models/selected-date.model';
 import { SelectedInterval } from './models/selected-interval.model';
 
 @Component({
@@ -121,7 +122,7 @@ export class BsngRangepickerComponent implements OnInit {
     }
   }
 
-  dateSelected(date: Date) {
+  dateSelected({ date, monthPosition }: SelectedDate) {
     const { start, end } = this.selectedInterval;
 
     if (start != null && end == null) {
@@ -141,6 +142,14 @@ export class BsngRangepickerComponent implements OnInit {
         start: startOfDay(date),
         end: null
       };
+    }
+
+    if (monthPosition === 'start') {
+      this.selectedStartMonth = date;
+    }
+
+    if (monthPosition === 'end') {
+      this.selectedEndMonth = date;
     }
   }
 
