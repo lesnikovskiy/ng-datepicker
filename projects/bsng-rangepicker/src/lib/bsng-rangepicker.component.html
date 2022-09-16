@@ -29,8 +29,8 @@
     </div>
     <div *ngIf="selectedRangeOption && selectedRangeOption.isCustom" class="range-footer">
       <span>{{ currentRangeDisplay }}</span>
+      <button class="btn btn-primary btn-sm" (click)="apply($event)" [disabled]="!selectionValid">Apply</button>
       <button class="btn btn-default btn-sm" (click)="cancel($event)">Cancel</button>
-      <button class="btn btn-primary btn-sm" (click)="apply($event)">Apply</button>
     </div>
   </div>
 </div>

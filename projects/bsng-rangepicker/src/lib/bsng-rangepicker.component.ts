@@ -83,6 +83,11 @@ export class BsngRangepickerComponent implements OnInit {
     return `${startDate} - ${endDate}`;
   }
 
+  get selectionValid(): boolean {
+    const { start, end } = this.selectedInterval;
+    return start != null && end != null && isValid(start) && isValid(end);
+  }
+
   @HostListener('document:click', ['$event'])
   clickOut(event: Event) {
     if (!this.elementRef.nativeElement.contains(event.target as HTMLElement)) {
@@ -210,7 +215,7 @@ export class BsngRangepickerComponent implements OnInit {
         end: parse(this.selectedRange[1], this.format, new Date(), { weekStartsOn: 1 })
       };
     } else {
-      this.selectedInterval = { start: null, end: null}
+      this.selectedInterval = { start: startOfDay(new Date()), end: endOfDay(new Date()) }
     }
 
     const { start } = this.selectedRangeOption?.interval || {};
