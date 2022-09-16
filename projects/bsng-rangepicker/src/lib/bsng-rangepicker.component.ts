@@ -24,6 +24,7 @@ export class BsngRangepickerComponent implements OnInit {
   maxDateDate: Date | null = null;
 
   selectedInterval: SelectedInterval = { start: null , end: null };
+  selectedIntervalValue = 'Select Date Range';
   intervalOptions: RangeOptionModel[] = [
     {
       title: 'Today',
@@ -71,15 +72,6 @@ export class BsngRangepickerComponent implements OnInit {
     this.maxDateDate = this.maxDate ? parse(this.maxDate, this.format, new Date(), { weekStartsOn: 1 }) : null;
   }
 
-  get selectedIntervalView(): string {
-    const { start, end } = this.selectedInterval;
-
-    const startDate = start != null && isValid(start) ? format(start, this.format, { weekStartsOn: 1 }) : null;
-    const endDate = end != null && isValid(end) ? format(end, this.format, { weekStartsOn: 1 }) : null;
-
-    return startDate != null && endDate != null ? `${startDate} - ${endDate}` : 'Select Date Range';
-  }
-
   get currentRangeDisplay(): string {
     const { start, end } = this.selectedInterval;
 
@@ -94,7 +86,7 @@ export class BsngRangepickerComponent implements OnInit {
   @HostListener('document:click', ['$event'])
   clickOut(event: Event) {
     if (!this.elementRef.nativeElement.contains(event.target as HTMLElement)) {
-      this.show = false;
+      this.cancel(event);
     }
   }
 
@@ -114,6 +106,13 @@ export class BsngRangepickerComponent implements OnInit {
 
     if (!this.selectedRangeOption.isCustom) {
       this.show = false;
+
+      const { start, end } = this.selectedRangeOption.interval;
+      const startDate = start != null && isValid(start) ? format(start, this.format, { weekStartsOn: 1 }) : null;
+      const endDate = end != null && isValid(end) ? format(end, this.format, { weekStartsOn: 1 }) : null;
+      this.selectedIntervalValue = startDate != null && endDate != null
+        ? `${startDate} - ${endDate}`
+        : 'Select Date Range';
     }
   }
 
@@ -174,6 +173,49 @@ export class BsngRangepickerComponent implements OnInit {
 
     this.selectedStartMonth = addMonths(this.selectedStartMonth, 1);
     this.selectedEndMonth = addMonths(this.selectedEndMonth, 1);
+  }
+
+  apply(event: Event) {
+    event.preventDefault();
+    event.stopPropagation();
+
+    this.show = false;
+
+    const { start, end } = this.selectedInterval;
+
+    const startDate = start != null && isValid(start) ? format(start, this.format, { weekStartsOn: 1 }) : null;
+    const endDate = end != null && isValid(end) ? format(end, this.format, { weekStartsOn: 1 }) : null;
+
+    if (startDate != null && endDate != null) {
+      this.selectedIntervalValue = `${startDate} - ${endDate}`;
+
+      this.rangeSelected.emit({
+        start: startDate,
+        end: endDate
+      });
+    } else {
+      this.selectedIntervalValue = 'Select Date Range';
+    }
+  }
+
+  cancel(event: Event) {
+    event.preventDefault();
+    event.stopPropagation();
+
+    this.show = false;
+
+    if (this.selectedRange != null) {
+      this.selectedInterval = {
+        start: parse(this.selectedRange[0], this.format, new Date(), { weekStartsOn: 1 }),
+        end: parse(this.selectedRange[1], this.format, new Date(), { weekStartsOn: 1 })
+      };
+    } else {
+      this.selectedInterval = { start: null, end: null}
+    }
+
+    const { start } = this.selectedRangeOption?.interval || {};
+    this.selectedStartMonth = start != null ? start as Date : new Date();
+    this.selectedEndMonth = addMonths(this.selectedStartMonth, 1);
   }
 
   private getInterval({ start, end }: SelectedInterval): Interval {

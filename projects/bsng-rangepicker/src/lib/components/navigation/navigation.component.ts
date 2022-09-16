@@ -85,7 +85,6 @@ export class NavigationComponent implements OnChanges {
   }
 
   getYearList(): DateOption[] {
-    debugger
     const interval = this.isNextVisible
       ? this.getNextYearInterval()
       : this.getPrevYearInterval();
