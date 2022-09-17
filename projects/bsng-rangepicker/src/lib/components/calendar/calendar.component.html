@@ -16,13 +16,13 @@
   </div>
 </div>
 <div *ngIf="isDateTime" class="time-container">
-  <select (change)="selectHour($event)">
+  <select (change)="selectHour($event)" [disabled]="isTimeDisabled">
     <option *ngFor="let h of hourList" [value]="h.time" [selected]="h.isSelected" [disabled]="h.isDisabled">
       {{ h.displayTime }}
     </option>
   </select>
   <span>:</span>
-  <select (change)="selectMinute($event)">
+  <select (change)="selectMinute($event)" [disabled]="isTimeDisabled">
     <option *ngFor="let m of minuteList" [value]="m.time" [selected]="m.isSelected" [disabled]="m.isDisabled">
       {{ m.displayTime }}
     </option>

@@ -133,18 +133,18 @@ export class BsngRangepickerComponent implements OnInit {
     if (start != null && end == null) {
       if (isBefore(date, start)) {
         this.selectedInterval = {
-          start: startOfDay(date), 
+          start: this.isDateTime ? date : startOfDay(date), 
           end: null
         };
       } else {
         this.selectedInterval = {
           start,
-          end: endOfDay(date)
+          end: this.isDateTime ? date : endOfDay(date)
         };
       }
     } else {
       this.selectedInterval = {
-        start: startOfDay(date),
+        start: this.isDateTime ? date : startOfDay(date),
         end: null
       };
     }

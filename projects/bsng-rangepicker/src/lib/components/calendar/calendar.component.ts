@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@angular/core';
-import { addDays, addMonths, eachDayOfInterval, eachHourOfInterval, eachMinuteOfInterval, endOfDay, endOfHour, endOfMonth, endOfWeek, format, getDay, getHours, getMinutes, isAfter, isBefore, isSameDay, isSameHour, isSameMinute, isSameMonth, isToday, isWithinInterval, startOfDay, startOfHour, startOfMonth, startOfWeek, subMonths } from 'date-fns';
+import { addDays, addMonths, eachDayOfInterval, eachHourOfInterval, eachMinuteOfInterval, endOfDay, endOfHour, endOfMinute, endOfMonth, endOfWeek, format, getDay, getHours, getMinutes, isAfter, isBefore, isSameDay, isSameHour, isSameMinute, isSameMonth, isToday, isWithinInterval, startOfDay, startOfHour, startOfMinute, startOfMonth, startOfWeek, subMonths } from 'date-fns';
 import { MonthPosition } from '../../models/month-position.type';
 import { SelectedDate } from '../../models/selected-date.model';
 import { SelectedHour } from '../../models/selected-hour.model';
@@ -107,6 +107,18 @@ export class CalendarComponent implements OnInit {
 
     const next = addMonths(this.selectedMonth, 1);
     return isAfter(next, endOfMonth(this.maxDate));
+  }
+
+  get isTimeDisabled(): boolean {
+    if (this.monthPosition === 'start') {
+      return this.selectedInterval.start == null;
+    }
+
+    if (this.monthPosition === 'end') {
+      return this.selectedInterval.end == null;
+    }
+
+    return false;
   }
 
   getDayClassList(day: CalendarDay): Record<string, boolean> {
@@ -284,11 +296,11 @@ export class CalendarComponent implements OnInit {
     return eachHourOfInterval({
       start: startOfDay(selectedDate),
       end: endOfDay(selectedDate)
-    }).map(q => ({
-      time: getHours(q),
-      displayTime: format(q, 'HH', { weekStartsOn: 1 }),
-      isSelected: selectedDate != null && isSameHour(q, selectedDate),
-      isDisabled: false
+    }).map(d => ({
+      time: getHours(d),
+      displayTime: format(d, 'HH', { weekStartsOn: 1 }),
+      isSelected: selectedDate != null && isSameHour(d, selectedDate),
+      isDisabled: this.isHourDisabled(d)
     }));
   }
 
@@ -299,11 +311,11 @@ export class CalendarComponent implements OnInit {
     return eachMinuteOfInterval({
       start: startOfHour(selectedDate),
       end: endOfHour(selectedDate)
-    }).map(q => ({
-      time: getMinutes(q),
-      displayTime: format(q, 'mm', { weekStartsOn: 1 }),
-      isSelected: selectedDate != null &&  isSameMinute(q, selectedDate),
-      isDisabled: false
+    }).map(d => ({
+      time: getMinutes(d),
+      displayTime: format(d, 'mm', { weekStartsOn: 1 }),
+      isSelected: selectedDate != null &&  isSameMinute(d, selectedDate),
+      isDisabled: this.isMinuteDisabled(d)
     }));
   }
 
@@ -311,5 +323,29 @@ export class CalendarComponent implements OnInit {
     return this.monthPosition === 'start'
       ? this.selectedInterval.start
       : this.selectedInterval.end;
+  }
+
+  private isHourDisabled(date: Date): boolean {
+    if (this.minDate != null && isBefore(date, startOfHour(this.minDate))) {
+      return true;
+    }
+
+    if (this.maxDate != null && isAfter(date, endOfHour(this.maxDate))) {
+      return true;
+    }
+
+    return false;
+  }
+
+  private isMinuteDisabled(date: Date) {
+    if (this.minDate != null && isBefore(date, startOfMinute(this.minDate))) {
+      return true;
+    }
+
+    if (this.maxDate != null && isAfter(date, endOfMinute(this.maxDate))) {
+      return true;
+    }
+
+    return false;
   }
 }
