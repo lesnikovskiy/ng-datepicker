@@ -1,8 +1,11 @@
 import { Component, ElementRef, EventEmitter, HostListener, Input, OnInit, Output } from '@angular/core';
-import { addMonths, endOfDay, endOfWeek, format, Interval, isBefore, isValid, parse, startOfDay, startOfWeek, subMonths } from 'date-fns';
+import { addMonths, endOfDay, endOfWeek, format, Interval, isBefore, isValid, parse, setMonth, setYear, startOfDay, startOfWeek, subMonths } from 'date-fns';
 import { RangeOptionModel, SelectedRange } from '../public-api';
+import { MonthPosition } from './models/month-position.type';
 import { SelectedDate } from './models/selected-date.model';
 import { SelectedInterval } from './models/selected-interval.model';
+import { SelectedMonth } from './models/selected-month.model';
+import { SelectedYear } from './models/selected-year.model';
 
 @Component({
   selector: 'bsng-rangepicker',
@@ -153,6 +156,30 @@ export class BsngRangepickerComponent implements OnInit {
     }
   }
 
+  monthSelected({ month, monthPosition }: SelectedMonth) {
+    if (monthPosition === 'start') {
+      this.selectedStartMonth = setMonth(this.selectedStartMonth, month);
+      this.adjustMonthPosition(monthPosition);
+    }
+
+    if (monthPosition === 'end') {
+      this.selectedEndMonth = setMonth(this.selectedEndMonth, month);
+      this.adjustMonthPosition(monthPosition);
+    }
+  }
+
+  yearSelected({ year, monthPosition }: SelectedYear) {
+    if (monthPosition === 'start') {
+      this.selectedStartMonth = setYear(this.selectedStartMonth, year);
+      this.adjustMonthPosition(monthPosition);
+    }
+
+    if (monthPosition === 'end') {
+      this.selectedEndMonth = setYear(this.selectedEndMonth, year);
+      this.adjustMonthPosition(monthPosition);
+    }
+  }
+
   setSelectedRange({ start, end }: Interval) {
     if (!isValid(start) || !isValid(end)) {
       this.hasError = true;
@@ -230,6 +257,24 @@ export class BsngRangepickerComponent implements OnInit {
     const { start } = this.selectedRangeOption?.interval || {};
     this.selectedStartMonth = start != null ? start as Date : new Date();
     this.selectedEndMonth = addMonths(this.selectedStartMonth, 1);
+  }
+
+  private adjustMonthPosition(position: MonthPosition) {
+    if (position === 'start') {
+      this.adjustStartMonthPosition();
+    }
+
+    if (position === 'end') {
+      this.adjustEndMonthPosition();
+    }
+  }
+
+  private adjustStartMonthPosition() {
+    this.selectedEndMonth = addMonths(this.selectedStartMonth, 1);
+  }
+
+  private adjustEndMonthPosition() {
+    this.selectedStartMonth = subMonths(this.selectedEndMonth, 1);
   }
 
   private getInterval({ start, end }: SelectedInterval): Interval {

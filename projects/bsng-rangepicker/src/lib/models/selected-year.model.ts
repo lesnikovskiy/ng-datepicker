@@ -1,4 +1,6 @@
+import { MonthPosition } from "./month-position.type";
+
 export interface SelectedYear {
-  month: number;
-  monthPosition: 'start' | 'end';
+  year: number;
+  monthPosition: MonthPosition;
 }

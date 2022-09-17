@@ -1,7 +1,6 @@
-<bsng-navigation [selectedMonth]="selectedMonth" [isPrevDisabled]="isPrevDisabled" [isNextDisabled]="isNextDisabled"
-  [isPrevVisible]="isPrevVisible" [isNextVisible]="isNextVisible" [minDate]="minDate" [maxDate]="maxDate"
-  (prevMonth)="prevMonth.emit($event)" (nextMonth)="nextMonth.emit($event)"
-  (monthSelect)="monthSelect($event)" (yearSelect)="yearSelect($event)">
+<bsng-navigation [selectedMonth]="selectedMonth" [monthPosition]="monthPosition" [isPrevDisabled]="isPrevDisabled"
+  [isNextDisabled]="isNextDisabled" [minDate]="minDate" [maxDate]="maxDate" (prevMonth)="prevMonth.emit($event)"
+  (nextMonth)="nextMonth.emit($event)" (monthSelected)="monthSelected.emit($event)" (yearSelected)="yearSelected.emit($event)">
 </bsng-navigation>
 <div class="calendar-month">
   <div class="day-names">

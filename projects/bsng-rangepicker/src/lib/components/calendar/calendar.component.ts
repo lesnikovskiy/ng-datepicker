@@ -1,7 +1,10 @@
 import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@angular/core';
-import { addDays, addMonths, eachDayOfInterval, endOfDay, endOfMonth, endOfWeek, format, getDay, isAfter, isBefore, isSameDay, isSameMonth, isToday, isWithinInterval, setMonth, setYear, startOfDay, startOfMonth, startOfWeek, subMonths } from 'date-fns';
+import { addDays, addMonths, eachDayOfInterval, endOfDay, endOfMonth, endOfWeek, format, getDay, isAfter, isBefore, isSameDay, isSameMonth, isToday, isWithinInterval, startOfDay, startOfMonth, startOfWeek, subMonths } from 'date-fns';
+import { MonthPosition } from '../../models/month-position.type';
 import { SelectedDate } from '../../models/selected-date.model';
 import { SelectedInterval } from '../../models/selected-interval.model';
+import { SelectedMonth } from '../../models/selected-month.model';
+import { SelectedYear } from '../../models/selected-year.model';
 
 interface CalendarDay {
   date: Date;
@@ -22,26 +25,22 @@ interface CalendarDay {
 export class CalendarComponent implements OnInit {
   @Input() selectedInterval!: SelectedInterval;
   @Input() selectedMonth!: Date;
-  @Input() monthPosition!: 'start' | 'end';
+  @Input() monthPosition!: MonthPosition;
   @Input() daysOfWeekDisabled: number[] = [];
   @Input() isDateTime = false;
   @Input() minDate: Date | null = null;
   @Input() maxDate: Date | null = null;
 
   @Output() dateSelected = new EventEmitter<SelectedDate>();
+  @Output() monthSelected = new EventEmitter<SelectedMonth>();
+  @Output() yearSelected = new EventEmitter<SelectedYear>();
   @Output() prevMonth = new EventEmitter<Event>();
   @Output() nextMonth = new EventEmitter<Event>();
 
   namesOfDays: string[] = [];
   weeks: CalendarDay[][] = [];
 
-  isPrevVisible = true;
-  isNextVisible = true;
-
   ngOnInit() {
-    this.isPrevVisible = this.monthPosition === 'start';
-    this.isNextVisible = this.monthPosition === 'end';
-
     this.namesOfDays = this.getWeekDayNames();
     this.renderCalendar();
   }
@@ -80,14 +79,16 @@ export class CalendarComponent implements OnInit {
   }
 
   get isPrevDisabled(): boolean {
-    if (!this.isPrevVisible || this.minDate == null) return false;
+    if (this.monthPosition === 'end' || this.minDate == null) {
+      return false;
+    }
 
     const prevMonth = subMonths(new Date(this.selectedMonth), 1);
     return isBefore(prevMonth, startOfMonth(this.minDate));
   }
 
   get isNextDisabled(): boolean {
-    if (!this.isNextVisible || this.maxDate == null) {
+    if (this.monthPosition === 'start' || this.maxDate == null) {
       return false;
     };
 
@@ -127,16 +128,6 @@ export class CalendarComponent implements OnInit {
         monthPosition: this.monthPosition
       });
     }
-  }
-
-  monthSelect(month: number) {
-    this.selectedMonth = setMonth(this.selectedMonth, month);
-    this.renderCalendar();
-  }
-
-  yearSelect(year: number) {
-    this.selectedMonth = setYear(this.selectedMonth, year);
-    this.renderCalendar();
   }
 
   private renderCalendar(): void {

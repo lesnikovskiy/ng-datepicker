@@ -1,5 +1,8 @@
-import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
-import { addYears, compareDesc, eachMonthOfInterval, eachYearOfInterval, endOfMonth, endOfYear, format, getMonth, getYear, isAfter, isBefore, isSameMonth, isSameYear, startOfMonth, startOfYear, subYears } from 'date-fns';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
+import { addYears, eachMonthOfInterval, eachYearOfInterval, endOfMonth, endOfYear, format, getMonth, getYear, isAfter, isBefore, isSameMonth, isSameYear, startOfMonth, startOfYear, subYears } from 'date-fns';
+import { MonthPosition } from '../../models/month-position.type';
+import { SelectedMonth } from '../../models/selected-month.model';
+import { SelectedYear } from '../../models/selected-year.model';
 
 interface DateOption {
   date: number;
@@ -13,22 +16,28 @@ interface DateOption {
   templateUrl: './navigation.component.html',
   styleUrls: ['./navigation.component.scss']
 })
-export class NavigationComponent implements OnChanges {
+export class NavigationComponent implements OnChanges, OnInit {
   @Input() selectedMonth!: Date;
+  @Input() monthPosition!: MonthPosition;
   @Input() minDate: Date | null = null;
   @Input() maxDate: Date | null = null;
-  @Input() isPrevVisible = true;
-  @Input() isNextVisible = true;
   @Input() isPrevDisabled = false;
   @Input() isNextDisabled = false;
 
   @Output() prevMonth = new EventEmitter<Event>();
   @Output() nextMonth = new EventEmitter<Event>();
-  @Output() monthSelect = new EventEmitter<number>();
-  @Output() yearSelect = new EventEmitter<number>();
+  @Output() monthSelected = new EventEmitter<SelectedMonth>();
+  @Output() yearSelected = new EventEmitter<SelectedYear>();
 
+  isPrevVisible!: boolean;
+  isNextVisible!: boolean;
   monthList: DateOption[] = [];
   yearList: DateOption[] = [];
+
+  ngOnInit(): void {
+    this.isPrevVisible = this.monthPosition === 'start';
+    this.isNextVisible = this.monthPosition === 'end';
+  }
 
   ngOnChanges(changes: SimpleChanges): void {
     let updateUi = false;
@@ -80,7 +89,10 @@ export class NavigationComponent implements OnChanges {
 
     const target = event.target as HTMLSelectElement;
     const month = Number.parseInt(target.value, 10);
-    !isNaN(month) && this.monthSelect.emit(month)
+    !isNaN(month) && this.monthSelected.emit({
+      month,
+      monthPosition: this.monthPosition
+    })
   }
 
   selectYear(event: Event) {
@@ -89,7 +101,10 @@ export class NavigationComponent implements OnChanges {
 
     const target = event.target as HTMLSelectElement;
     const year = Number.parseInt(target.value, 10);
-    !isNaN(year) && this.yearSelect.emit(year);
+    !isNaN(year) && this.yearSelected.emit({
+      year,
+      monthPosition: this.monthPosition
+    });
   }
 
   private getMonthList(): DateOption[] {
@@ -105,9 +120,10 @@ export class NavigationComponent implements OnChanges {
   }
 
   private getYearList(): DateOption[] {
-    const interval = this.isNextVisible
-      ? this.getNextYearInterval()
-      : this.getPrevYearInterval();
+    const interval = eachYearOfInterval({
+      start: subYears(startOfYear(new Date()), 100),
+      end: addYears(startOfYear(new Date()), 100)
+    });
 
     return interval.map((date: Date) => ({
       date: getYear(date),
@@ -115,20 +131,6 @@ export class NavigationComponent implements OnChanges {
       isSelected: this.isSelectedYear(date),
       isDisabled: this.isYearDisabled(date)
     }));
-  }
-
-  private getNextYearInterval(): Date[] {
-    return eachYearOfInterval({
-      start: startOfYear(new Date()),
-      end: startOfYear(addYears(this.selectedMonth, 100))
-    });
-  }
-
-  private getPrevYearInterval(): Date[] {
-    return eachYearOfInterval({
-      start: startOfYear(subYears(this.selectedMonth, 100)),
-      end: startOfYear(new Date())
-    }).sort(compareDesc);
   }
 
   private isSelectedMonth(date: Date): boolean {
