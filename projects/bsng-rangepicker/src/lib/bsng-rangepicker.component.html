@@ -19,12 +19,14 @@
       <div *ngIf="selectedRangeOption && selectedRangeOption.isCustom" class="calendar-section">
         <bsng-calendar [selectedInterval]="selectedInterval" [selectedMonth]="selectedStartMonth" monthPosition="start"
           [daysOfWeekDisabled]="daysOfWeekDisabled" [isDateTime]="isDateTime" [minDate]="minDateDate"
-          [maxDate]="maxDateDate" (dateSelected)="dateSelected($event)" (monthSelected)="monthSelected($event)"
+          [maxDate]="maxDateDate" (dateSelected)="dateSelected($event)" (hourSelected)="hourSelected($event)"
+          (minuteSelected)="minuteSelected($event)" (monthSelected)="monthSelected($event)"
           (yearSelected)="yearSelected($event)" (prevMonth)="prevMonth($event)" (nextMonth)="nextMonth($event)">
         </bsng-calendar>
         <bsng-calendar [selectedInterval]="selectedInterval" [selectedMonth]="selectedEndMonth" monthPosition="end"
           [daysOfWeekDisabled]="daysOfWeekDisabled" [isDateTime]="isDateTime" [minDate]="minDateDate"
-          [maxDate]="maxDateDate" (dateSelected)="dateSelected($event)" (monthSelected)="monthSelected($event)"
+          [maxDate]="maxDateDate" (dateSelected)="dateSelected($event)" (hourSelected)="hourSelected($event)"
+          (minuteSelected)="minuteSelected($event)" (monthSelected)="monthSelected($event)"
           (yearSelected)="yearSelected($event)" (prevMonth)="prevMonth($event)" (nextMonth)="nextMonth($event)">
         </bsng-calendar>
       </div>

@@ -2,8 +2,8 @@ import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from
 import { addDays, addHours, addMinutes, eachHourOfInterval, endOfDay, endOfHour, endOfMinute, format, getDay, getMinutes, isAfter, isBefore, isSameMonth, setHours, setMinutes, startOfDay, startOfHour, startOfMinute, subDays, subHours, subMinutes } from 'date-fns';
 
 interface TimeUnit {
-  time: number,
-  displayTime: string,
+  time: number;
+  displayTime: string;
   isDisabled: boolean;
 }
 

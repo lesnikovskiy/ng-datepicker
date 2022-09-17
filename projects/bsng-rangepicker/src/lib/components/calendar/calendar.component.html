@@ -1,6 +1,7 @@
 <bsng-navigation [selectedMonth]="selectedMonth" [monthPosition]="monthPosition" [isPrevDisabled]="isPrevDisabled"
   [isNextDisabled]="isNextDisabled" [minDate]="minDate" [maxDate]="maxDate" (prevMonth)="prevMonth.emit($event)"
-  (nextMonth)="nextMonth.emit($event)" (monthSelected)="monthSelected.emit($event)" (yearSelected)="yearSelected.emit($event)">
+  (nextMonth)="nextMonth.emit($event)" (monthSelected)="monthSelected.emit($event)"
+  (yearSelected)="yearSelected.emit($event)">
 </bsng-navigation>
 <div class="calendar-month">
   <div class="day-names">
@@ -13,4 +14,17 @@
       </div>
     </div>
   </div>
+</div>
+<div *ngIf="isDateTime" class="time-container">
+  <select (change)="selectHour($event)">
+    <option *ngFor="let h of hourList" [value]="h.time" [selected]="h.isSelected" [disabled]="h.isDisabled">
+      {{ h.displayTime }}
+    </option>
+  </select>
+  <span>:</span>
+  <select (change)="selectMinute($event)">
+    <option *ngFor="let m of minuteList" [value]="m.time" [selected]="m.isSelected" [disabled]="m.isDisabled">
+      {{ m.displayTime }}
+    </option>
+  </select>
 </div>

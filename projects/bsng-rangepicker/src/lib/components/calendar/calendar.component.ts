@@ -1,8 +1,10 @@
 import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@angular/core';
-import { addDays, addMonths, eachDayOfInterval, endOfDay, endOfMonth, endOfWeek, format, getDay, isAfter, isBefore, isSameDay, isSameMonth, isToday, isWithinInterval, startOfDay, startOfMonth, startOfWeek, subMonths } from 'date-fns';
+import { addDays, addMonths, eachDayOfInterval, eachHourOfInterval, eachMinuteOfInterval, endOfDay, endOfHour, endOfMonth, endOfWeek, format, getDay, getHours, getMinutes, isAfter, isBefore, isSameDay, isSameHour, isSameMinute, isSameMonth, isToday, isWithinInterval, startOfDay, startOfHour, startOfMonth, startOfWeek, subMonths } from 'date-fns';
 import { MonthPosition } from '../../models/month-position.type';
 import { SelectedDate } from '../../models/selected-date.model';
+import { SelectedHour } from '../../models/selected-hour.model';
 import { SelectedInterval } from '../../models/selected-interval.model';
+import { SelectedMinute } from '../../models/selected-minute.model';
 import { SelectedMonth } from '../../models/selected-month.model';
 import { SelectedYear } from '../../models/selected-year.model';
 
@@ -15,6 +17,13 @@ interface CalendarDay {
   disabled: boolean;
   today: boolean;
   isSameMonth: boolean;
+}
+
+interface TimeUnit {
+  time: number;
+  displayTime: string;
+  isSelected: boolean;
+  isDisabled: boolean;
 }
 
 @Component({
@@ -32,6 +41,8 @@ export class CalendarComponent implements OnInit {
   @Input() maxDate: Date | null = null;
 
   @Output() dateSelected = new EventEmitter<SelectedDate>();
+  @Output() hourSelected = new EventEmitter<SelectedHour>();
+  @Output() minuteSelected = new EventEmitter<SelectedMinute>();
   @Output() monthSelected = new EventEmitter<SelectedMonth>();
   @Output() yearSelected = new EventEmitter<SelectedYear>();
   @Output() prevMonth = new EventEmitter<Event>();
@@ -39,6 +50,8 @@ export class CalendarComponent implements OnInit {
 
   namesOfDays: string[] = [];
   weeks: CalendarDay[][] = [];
+  hourList: TimeUnit[] = [{ time: 0, displayTime: '00', isSelected: false, isDisabled: true }];
+  minuteList: TimeUnit[] = [{ time: 0, displayTime: '00', isSelected: false, isDisabled: true }];
 
   ngOnInit() {
     this.namesOfDays = this.getWeekDayNames();
@@ -130,6 +143,32 @@ export class CalendarComponent implements OnInit {
     }
   }
 
+  selectHour(event: Event) {
+    event.preventDefault();
+    event.stopPropagation();
+
+    const target = event.target as HTMLSelectElement;
+    const hours = Number.parseInt(target.value, 10);
+
+    !isNaN(hours) && this.hourSelected.emit({
+      hours,
+      monthPosition: this.monthPosition
+    });
+  }
+
+  selectMinute(event: Event) {
+    event.preventDefault();
+    event.stopPropagation();
+
+    const target = event.target as HTMLSelectElement;
+    const minutes = Number.parseInt(target.value, 10);
+
+    !isNaN(minutes) && this.minuteSelected.emit({
+      minutes,
+      monthPosition: this.monthPosition
+    });
+  }
+
   private renderCalendar(): void {
     const dates = this.fillDates();
 
@@ -140,6 +179,15 @@ export class CalendarComponent implements OnInit {
     }
 
     this.weeks = weeks;
+
+    this.renderTimeUnits();
+  }
+
+  private renderTimeUnits() {
+    if (this.isDateTime) {
+      this.hourList = this.getHourList();
+      this.minuteList = this.getMinuteList();
+    }
   }
 
   private fillDates(): CalendarDay[] {
@@ -227,5 +275,41 @@ export class CalendarComponent implements OnInit {
     }
 
     return false;
+  }
+
+  private getHourList(): TimeUnit[] {
+    const selectedDate = this.getSelectedDate();
+    if (selectedDate == null) return [{ time: 0, displayTime: '00', isSelected: false, isDisabled: true }];
+
+    return eachHourOfInterval({
+      start: startOfDay(selectedDate),
+      end: endOfDay(selectedDate)
+    }).map(q => ({
+      time: getHours(q),
+      displayTime: format(q, 'HH', { weekStartsOn: 1 }),
+      isSelected: selectedDate != null && isSameHour(q, selectedDate),
+      isDisabled: false
+    }));
+  }
+
+  private getMinuteList(): TimeUnit[] {
+    const selectedDate = this.getSelectedDate();
+    if (selectedDate == null) return [{ time: 0, displayTime: '00', isSelected: false, isDisabled: true }];
+
+    return eachMinuteOfInterval({
+      start: startOfHour(selectedDate),
+      end: endOfHour(selectedDate)
+    }).map(q => ({
+      time: getMinutes(q),
+      displayTime: format(q, 'mm', { weekStartsOn: 1 }),
+      isSelected: selectedDate != null &&  isSameMinute(q, selectedDate),
+      isDisabled: false
+    }));
+  }
+
+  private getSelectedDate(): Date | null {
+    return this.monthPosition === 'start'
+      ? this.selectedInterval.start
+      : this.selectedInterval.end;
   }
 }

@@ -1,9 +1,11 @@
 import { Component, ElementRef, EventEmitter, HostListener, Input, OnInit, Output } from '@angular/core';
-import { addMonths, endOfDay, endOfWeek, format, Interval, isBefore, isValid, parse, setMonth, setYear, startOfDay, startOfWeek, subMonths } from 'date-fns';
+import { addMonths, endOfDay, endOfWeek, format, Interval, isBefore, isValid, parse, setHours, setMinutes, setMonth, setYear, startOfDay, startOfWeek, subMonths } from 'date-fns';
 import { RangeOptionModel, SelectedRange } from '../public-api';
 import { MonthPosition } from './models/month-position.type';
 import { SelectedDate } from './models/selected-date.model';
+import { SelectedHour } from './models/selected-hour.model';
 import { SelectedInterval } from './models/selected-interval.model';
+import { SelectedMinute } from './models/selected-minute.model';
 import { SelectedMonth } from './models/selected-month.model';
 import { SelectedYear } from './models/selected-year.model';
 
@@ -155,17 +157,53 @@ export class BsngRangepickerComponent implements OnInit {
       this.selectedEndMonth = date;
     }
   }
+  
+  hourSelected({ hours, monthPosition }: SelectedHour) {
+    const { start, end } = this.selectedInterval;
+
+    if (monthPosition === 'start' && start != null) {
+      this.selectedInterval = {
+        ...this.selectedInterval,
+        start: setHours(start, hours)
+      };
+    }
+
+    if (monthPosition === 'end' && end != null) {
+      this.selectedInterval = {
+        ...this.selectedInterval,
+        end: setHours(end, hours)
+      };
+    }
+  }
+
+  minuteSelected({ minutes, monthPosition }: SelectedMinute) {
+    const { start, end } = this.selectedInterval;
+
+    if (monthPosition === 'start' && start != null) {
+      this.selectedInterval = {
+        ...this.selectedInterval,
+        start: setMinutes(start, minutes)
+      };
+    }
+
+    if (monthPosition === 'end' && end != null) {
+      this.selectedInterval = {
+        ...this.selectedInterval,
+        end: setMinutes(end, minutes)
+      };
+    }
+  }
 
   monthSelected({ month, monthPosition }: SelectedMonth) {
     if (monthPosition === 'start') {
       this.selectedStartMonth = setMonth(this.selectedStartMonth, month);
-      this.adjustMonthPosition(monthPosition);
     }
 
     if (monthPosition === 'end') {
       this.selectedEndMonth = setMonth(this.selectedEndMonth, month);
-      this.adjustMonthPosition(monthPosition);
     }
+
+    this.adjustMonthPosition(monthPosition);
   }
 
   yearSelected({ year, monthPosition }: SelectedYear) {

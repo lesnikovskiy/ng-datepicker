@@ -117,3 +117,19 @@
     }
   }
 }
+
+.time-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  & select {
+    width: 50px;
+    margin: 0 3px;
+    background: #eee;
+    border: 1px solid #eee;
+    padding: 2px;
+    outline: 0;
+    font-size: 12px;
+  }
+}
